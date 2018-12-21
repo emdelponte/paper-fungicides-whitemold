@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">NMA fungicide effects on white mold</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa fa fa-home"></span>
+     
+    About
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa fa fa-table"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa fa fa-file-code-o"></span>
+     
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="code-inc.html">Incidence reduction</a>
+    </li>
+    <li>
+      <a href="code-scl.html">Sclerotia reduction</a>
+    </li>
+    <li>
+      <a href="code-yld.html">Yield response</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="plots.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emdelponte/research-compendium-website">
+    <span class="fa fa-github-square"></span>
+     
+    source
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>The data used in this analysis were obtained from the network of cooperative trials for evaluating fungicide efficacy on the reduction of white mold of soybean and yield response. The experiments were conducted in the main soybean growing regions of Brazil where white mold causes significant losses.</p>
+<p>The primary data has been published as annual reports that summarized either a mean value for the treatments across all experiments for the year or, in some years, the mean values at the trial level.</p>
+<p>There are three respnse variables of our interest in the studies:</p>
+<ul>
+<li><strong>White mold incidence</strong> (%, <strong>inc</strong>): proportion of plants affected</li>
+<li><strong>Post-harvest sclerotia mass</strong> (g/ha, <strong>scl</strong>): sclerotia weight</li>
+<li><strong>Crop yield</strong> (kg/ha, <strong>yld</strong>): grain weight at 13% humidity</li>
+</ul>
+<p>The original spreadsheets from each trial were obtained from collaborators and the data used for the analysis were organized in a single spreadsheet where each row represents a treatment within a trial (study). Each trial was conducted in a randomized complete block design with four replicates. A preliminary analysis were conducted (not shown) to obtain the treatment means for each variable. The sampling variance for the study (trial) was obtained by fitting an Anova model for the raw data and using the mean square error (MSE) to calculate the sampling variance. Additionally, for each treament, the standard deviation (four blocks) was calculated for each variable during the data preparation step.</p>
+<div id="data-import" class="section level2">
+<h2>Data import</h2>
+<p>The full data was stored in a GoogleSheet. Let’s import the data using the <code>gsheet</code> package.</p>
+<pre class="r"><code>Sys.setlocale(&quot;LC_ALL&quot;, &quot;pt_BR.UTF-8&quot;) # set UT-8 for displaying names correctly</code></pre>
+<pre><code>## [1] &quot;pt_BR.UTF-8/pt_BR.UTF-8/pt_BR.UTF-8/C/pt_BR.UTF-8/C&quot;</code></pre>
+<pre class="r"><code>library(gsheet)
+dat_wm &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit?usp=sharing&quot;
+)</code></pre>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<pre class="r"><code>dplyr::glimpse(dat_wm)</code></pre>
+<pre><code>## Observations: 787
+## Variables: 36
+## $ study       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2,...
+## $ year        &lt;chr&gt; &quot;2008/2009&quot;, &quot;2008/2009&quot;, &quot;2008/2009&quot;, &quot;2008/2009&quot;...
+## $ location    &lt;chr&gt; &quot;Montividiu&quot;, &quot;Montividiu&quot;, &quot;Montividiu&quot;, &quot;Montivi...
+## $ state       &lt;chr&gt; &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;G...
+## $ elevation   &lt;dbl&gt; 921, 921, 921, 921, 921, 921, 921, 921, 921, 921, ...
+## $ region      &lt;chr&gt; &quot;Northern&quot;, &quot;Northern&quot;, &quot;Northern&quot;, &quot;Northern&quot;, &quot;N...
+## $ pd          &lt;chr&gt; &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, &quot;11/1/2008&quot;...
+## $ cultivar    &lt;chr&gt; &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, ...
+## $ fungicide   &lt;chr&gt; &quot;FLUO&quot;, &quot;PROCY&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUZ&quot;, &quot;AACHECK&quot;, &quot;...
+## $ dose1       &lt;chr&gt; &quot;250g/há&quot;, &quot;500g/há&quot;, &quot;400g/há&quot;, &quot;500g/há&quot;, NA, &quot;5...
+## $ dose2       &lt;chr&gt; &quot;0.5L/há&quot;, &quot;1kg/há&quot;, &quot;1L/há&quot;, &quot;1L/há&quot;, NA, &quot;1L/há&quot;...
+## $ group       &lt;chr&gt; &quot;pyridinyl-ethyl-benzamides&quot;, &quot;dicarboxamida&quot;, &quot;Ca...
+## $ n_spray     &lt;dbl&gt; 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,...
+## $ inc_check   &lt;dbl&gt; 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 53, 53...
+## $ inc         &lt;dbl&gt; 27, 40, 28, 26, 76, 53, 29, 55, 36, 37, 42, 16, 7,...
+## $ inc_mean    &lt;dbl&gt; 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39...
+## $ inc_cv      &lt;dbl&gt; 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 53, 53...
+## $ inc_qmr     &lt;dbl&gt; 86.70228, 86.70228, 86.70228, 86.70228, 86.70228, ...
+## $ sd_inc      &lt;dbl&gt; 7.071068, 9.535023, 3.304038, 6.701990, 5.597619, ...
+## $ scl_check   &lt;chr&gt; &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2...
+## $ scl         &lt;chr&gt; &quot;643&quot;, &quot;516&quot;, &quot;921&quot;, &quot;643&quot;, &quot;2194&quot;, &quot;1663&quot;, &quot;753&quot;,...
+## $ scl_mean    &lt;chr&gt; &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, ...
+## $ scl_cv      &lt;chr&gt; &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;2...
+## $ scl_qmr     &lt;chr&gt; &quot;262333.99&quot;, &quot;262333.99&quot;, &quot;262333.99&quot;, &quot;262333.99&quot;...
+## $ sd_scl      &lt;chr&gt; &quot;191.3697882&quot;, &quot;243.1177698&quot;, &quot;344.8573074&quot;, &quot;478....
+## $ yld_check   &lt;dbl&gt; 2265, 2265, 2265, 2265, 2265, 2265, 2265, 2265, 22...
+## $ yld         &lt;dbl&gt; 3044, 2967, 2925, 2965, 2265, 2618, 2820, 2503, 28...
+## $ yld_mean    &lt;dbl&gt; 2772.8, 2772.8, 2772.8, 2772.8, 2772.8, 2772.8, 27...
+## $ yld_cv      &lt;dbl&gt; 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8,...
+## $ yld_qmr     &lt;dbl&gt; 34780.02, 34780.02, 34780.02, 34780.02, 34780.02, ...
+## $ sd_yld      &lt;dbl&gt; 189.12, 226.41, 203.47, 285.09, 85.57, 110.48, 142...
+## $ author      &lt;chr&gt; &quot;Embrapa soja&quot;, &quot;Embrapa soja&quot;, &quot;Embrapa soja&quot;, &quot;E...
+## $ publication &lt;chr&gt; &quot;Documentos 345&quot;, &quot;Documentos 345&quot;, &quot;Documentos 34...
+## $ design_yld  &lt;dbl&gt; 3, 3, 3, 3, 3, 3, NA, NA, NA, NA, NA, 3, 3, 3, 3, ...
+## $ design_scl  &lt;dbl&gt; 4, 4, 4, 4, 4, 4, NA, NA, NA, NA, NA, 4, 4, 4, 4, ...
+## $ design_inc  &lt;dbl&gt; 2, 2, 2, 2, 2, 2, NA, NA, NA, NA, NA, 2, 2, 2, 2, ...</code></pre>
+<p>Let’s reduce the number of columns by selecting the most important variables for our analysis.</p>
+<pre class="r"><code>library(tidyverse) # for using pipes
+dat_wm &lt;- dat_wm %&gt;%
+  select(1:6, 9, 13:31, 34:36)</code></pre>
+</div>
+<div id="data-exploration" class="section level2">
+<h2>Data exploration</h2>
+<p>The analysis of the raw data shows that multiple entries of the same fungicide, applied in same number of spray, were found in some of the trials. Let’s find these duplicate entries in a same trial to later summarize as one entry per trial.</p>
+<pre class="r"><code>library(janitor)
+dat_wm %&gt;%
+  get_dupes(fungicide, study, n_spray)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide"],"name":[1],"type":["chr"],"align":["left"]},{"label":["study"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["n_spray"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["dupe_count"],"name":[4],"type":["int"],"align":["right"]},{"label":["year"],"name":[5],"type":["chr"],"align":["left"]},{"label":["location"],"name":[6],"type":["chr"],"align":["left"]},{"label":["state"],"name":[7],"type":["chr"],"align":["left"]},{"label":["elevation"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["region"],"name":[9],"type":["chr"],"align":["left"]},{"label":["inc_check"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["inc"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["inc_mean"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["inc_cv"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["inc_qmr"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd_inc"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["scl_check"],"name":[16],"type":["chr"],"align":["left"]},{"label":["scl"],"name":[17],"type":["chr"],"align":["left"]},{"label":["scl_mean"],"name":[18],"type":["chr"],"align":["left"]},{"label":["scl_cv"],"name":[19],"type":["chr"],"align":["left"]},{"label":["scl_qmr"],"name":[20],"type":["chr"],"align":["left"]},{"label":["sd_scl"],"name":[21],"type":["chr"],"align":["left"]},{"label":["yld_check"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["yld"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["yld_mean"],"name":[24],"type":["dbl"],"align":["right"]},{"label":["yld_cv"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["yld_qmr"],"name":[26],"type":["dbl"],"align":["right"]},{"label":["sd_yld"],"name":[27],"type":["dbl"],"align":["right"]},{"label":["design_yld"],"name":[28],"type":["dbl"],"align":["right"]},{"label":["design_scl"],"name":[29],"type":["dbl"],"align":["right"]},{"label":["design_inc"],"name":[30],"type":["dbl"],"align":["right"]}],"data":[{"1":"CARB","2":"1","3":"2","4":"4","5":"2008/2009","6":"Montividiu","7":"GO","8":"921","9":"Northern","10":"76","11":"29","12":"39.2","13":"17","14":"86.70228","15":"7.325754","16":"2194","17":"753","18":"1098.5","19":"24","20":"262333.99","21":"274.476775","22":"2265","23":"2820","24":"2772.8","25":"6","26":"34780.02","27":"142.02","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"1","3":"2","4":"4","5":"2008/2009","6":"Montividiu","7":"GO","8":"921","9":"Northern","10":"76","11":"55","12":"39.2","13":"17","14":"86.70228","15":"8.655441","16":"2194","17":"1519","18":"1098.5","19":"24","20":"262333.99","21":"596.8681282","22":"2265","23":"2503","24":"2772.8","25":"6","26":"34780.02","27":"198.49","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"1","3":"2","4":"4","5":"2008/2009","6":"Montividiu","7":"GO","8":"921","9":"Northern","10":"76","11":"37","12":"39.2","13":"17","14":"86.70228","15":"6.055301","16":"2194","17":"1177","18":"1098.5","19":"24","20":"262333.99","21":"871.5368968","22":"2265","23":"2632","24":"2772.8","25":"6","26":"34780.02","27":"267.13","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"1","3":"2","4":"4","5":"2008/2009","6":"Montividiu","7":"GO","8":"921","9":"Northern","10":"76","11":"42","12":"39.2","13":"17","14":"86.70228","15":"13.784049","16":"2194","17":"1343","18":"1098.5","19":"24","20":"262333.99","21":"887.7836988","22":"2265","23":"2799","24":"2772.8","25":"6","26":"34780.02","27":"145.83","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"2","3":"2","4":"4","5":"2008/2009","6":"São Miguel do Passa Quatro","7":"GO","8":"1031","9":"Northern","10":"53","11":"34","12":"25.6","13":"53","14":"131.38518","15":"10.369100","16":"1331","17":"231","18":"497.2","19":"57","20":"103269.3","21":"194.0092352","22":"2257","23":"2308","24":"2493.8","25":"8","26":"37608.39","27":"84.88","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"2","3":"2","4":"4","5":"2008/2009","6":"São Miguel do Passa Quatro","7":"GO","8":"1031","9":"Northern","10":"53","11":"31","12":"25.6","13":"53","14":"131.38518","15":"18.258701","16":"1331","17":"925","18":"497.2","19":"57","20":"103269.3","21":"232.7373341","22":"2257","23":"2389","24":"2493.8","25":"8","26":"37608.39","27":"97.42","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"2","3":"2","4":"4","5":"2008/2009","6":"São Miguel do Passa Quatro","7":"GO","8":"1031","9":"Northern","10":"53","11":"37","12":"25.6","13":"53","14":"131.38518","15":"17.480340","16":"1331","17":"588","18":"497.2","19":"57","20":"103269.3","21":"440.8798022","22":"2257","23":"2320","24":"2493.8","25":"8","26":"37608.39","27":"134.20","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"2","3":"2","4":"4","5":"2008/2009","6":"São Miguel do Passa Quatro","7":"GO","8":"1031","9":"Northern","10":"53","11":"33","12":"25.6","13":"53","14":"131.38518","15":"10.277478","16":"1331","17":"581","18":"497.2","19":"57","20":"103269.3","21":"529.6913409","22":"2257","23":"2568","24":"2493.8","25":"8","26":"37608.39","27":"327.90","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"3","3":"2","4":"4","5":"2008/2009","6":"Silvânia","7":"GO","8":"1050","9":"Northern","10":"65","11":"31","12":"34.2","13":"38","14":"170.50340","15":"7.687869","16":"5013","17":"1556","18":"2397.3","19":"65","20":"2801838.65","21":"1209.575511","22":"2839","23":"3321","24":"3381.3","25":"6","26":"32613.33","27":"132.19","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"3","3":"2","4":"4","5":"2008/2009","6":"Silvânia","7":"GO","8":"1050","9":"Northern","10":"65","11":"48","12":"34.2","13":"38","14":"170.50340","15":"6.592609","16":"5013","17":"3969","18":"2397.3","19":"65","20":"2801838.65","21":"2033.918119","22":"2839","23":"3220","24":"3381.3","25":"6","26":"32613.33","27":"144.00","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"3","3":"2","4":"4","5":"2008/2009","6":"Silvânia","7":"GO","8":"1050","9":"Northern","10":"65","11":"39","12":"34.2","13":"38","14":"170.50340","15":"14.727525","16":"5013","17":"3175","18":"2397.3","19":"65","20":"2801838.65","21":"2387.554537","22":"2839","23":"3229","24":"3381.3","25":"6","26":"32613.33","27":"37.75","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"3","3":"2","4":"4","5":"2008/2009","6":"Silvânia","7":"GO","8":"1050","9":"Northern","10":"65","11":"35","12":"34.2","13":"38","14":"170.50340","15":"16.588090","16":"5013","17":"2588","18":"2397.3","19":"65","20":"2801838.65","21":"2400.043402","22":"2839","23":"3301","24":"3381.3","25":"6","26":"32613.33","27":"211.09","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"5","3":"2","4":"4","5":"2008/2009","6":"Mauá da Serra","7":"PR","8":"1029","9":"Southern","10":"69","11":"44","12":"39.8","13":"34","14":"169.02157","15":"16.779824","16":"6216","17":"3424","18":"2563.4","19":"51","20":"1659291.06","21":"1202.281165","22":"1893","23":"2577","24":"2472.5","25":"13","26":"98805.48","27":"131.05","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"5","3":"2","4":"4","5":"2008/2009","6":"Mauá da Serra","7":"PR","8":"1029","9":"Southern","10":"69","11":"40","12":"39.8","13":"34","14":"169.02157","15":"17.161913","16":"6216","17":"2412","18":"2563.4","19":"51","20":"1659291.06","21":"1534.053454","22":"1893","23":"2383","24":"2472.5","25":"13","26":"98805.48","27":"317.28","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"5","3":"2","4":"4","5":"2008/2009","6":"Mauá da Serra","7":"PR","8":"1029","9":"Southern","10":"69","11":"39","12":"39.8","13":"34","14":"169.02157","15":"8.633148","16":"6216","17":"2868","18":"2563.4","19":"51","20":"1659291.06","21":"1572.361282","22":"1893","23":"2609","24":"2472.5","25":"13","26":"98805.48","27":"548.18","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"5","3":"2","4":"4","5":"2008/2009","6":"Mauá da Serra","7":"PR","8":"1029","9":"Southern","10":"69","11":"40","12":"39.8","13":"34","14":"169.02157","15":"22.315213","16":"6216","17":"2372","18":"2563.4","19":"51","20":"1659291.06","21":"1745.829316","22":"1893","23":"2480","24":"2472.5","25":"13","26":"98805.48","27":"399.18","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"6","3":"2","4":"4","5":"2008/2009","6":"Nova Ponte","7":"MG","8":"999","9":"Northern","10":"21","11":"17","12":"12.0","13":"56","14":"18.57798","15":"7.118052","16":"8500","17":"7000","18":"6060.3","19":"50","20":"1378385.61","21":"1314.97782","22":"2476","23":"2439","24":"2512.6","25":"11","26":"75093.20","27":"224.96","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"6","3":"2","4":"4","5":"2008/2009","6":"Nova Ponte","7":"MG","8":"999","9":"Northern","10":"21","11":"13","12":"12.0","13":"56","14":"18.57798","15":"7.874008","16":"8500","17":"7167","18":"6060.3","19":"50","20":"1378385.61","21":"1637.770334","22":"2476","23":"2718","24":"2512.6","25":"11","26":"75093.20","27":"160.29","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"6","3":"2","4":"4","5":"2008/2009","6":"Nova Ponte","7":"MG","8":"999","9":"Northern","10":"21","11":"16","12":"12.0","13":"56","14":"18.57798","15":"4.123106","16":"8500","17":"11000","18":"6060.3","19":"50","20":"1378385.61","21":"1761.864543","22":"2476","23":"2450","24":"2512.6","25":"11","26":"75093.20","27":"359.28","28":"NA","29":"NA","30":"NA"},{"1":"CARB","2":"6","3":"2","4":"4","5":"2008/2009","6":"Nova Ponte","7":"MG","8":"999","9":"Northern","10":"21","11":"16","12":"12.0","13":"56","14":"18.57798","15":"2.217356","16":"8500","17":"7667","18":"6060.3","19":"50","20":"1378385.61","21":"2222.048604","22":"2476","23":"2505","24":"2512.6","25":"11","26":"75093.20","27":"271.14","28":"NA","29":"NA","30":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="data-exploration-1" class="section level2">
+<h2>Data exploration</h2>
+<p>Number of treatments per year.</p>
+<pre class="r"><code>library(janitor) # for data cleaning and summary
+dat_wm %&gt;%
+  tabyl(year)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["year"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2008/2009","2":"55","3":"0.06988564"},{"1":"2009/2010","2":"96","3":"0.12198221"},{"1":"2010/2011","2":"70","3":"0.08894536"},{"1":"2011/2012","2":"136","3":"0.17280813"},{"1":"2012/2013","2":"96","3":"0.12198221"},{"1":"2013/2014","2":"71","3":"0.09021601"},{"1":"2014/2015","2":"38","3":"0.04828463"},{"1":"2015/2016","2":"81","3":"0.10292249"},{"1":"2016/2017","2":"72","3":"0.09148666"},{"1":"2017/2018","2":"72","3":"0.09148666"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>By location</p>
+<pre class="r"><code>dat_wm %&gt;%
+  tabyl(location)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["location"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Água Fria","2":"23","3":"0.02922490"},{"1":"Barreiras","2":"8","3":"0.01016518"},{"1":"Campo Verde","2":"27","3":"0.03430750"},{"1":"Capão Bonito","2":"11","3":"0.01397713"},{"1":"Chapadão do Sul","2":"54","3":"0.06861499"},{"1":"Faxinal","2":"31","3":"0.03939009"},{"1":"Goianira","2":"11","3":"0.01397713"},{"1":"Jataí","2":"12","3":"0.01524778"},{"1":"Júlio de  Castilhos","2":"16","3":"0.02033037"},{"1":"Marilândia do Sul","2":"11","3":"0.01397713"},{"1":"Mauá da Serra","2":"75","3":"0.09529860"},{"1":"Montividiu","2":"101","3":"0.12833545"},{"1":"Nova Ponte","2":"23","3":"0.02922490"},{"1":"Palmeira","2":"32","3":"0.04066074"},{"1":"Pilar do Sul","2":"12","3":"0.01524778"},{"1":"Pitanga","2":"18","3":"0.02287166"},{"1":"Ponta Grossa","2":"90","3":"0.11435832"},{"1":"Rio Verde","2":"30","3":"0.03811944"},{"1":"São Desiderio","2":"20","3":"0.02541296"},{"1":"São Miguel do Passa Quatro","2":"72","3":"0.09148666"},{"1":"Silvânia","2":"58","3":"0.07369759"},{"1":"Uberlândia","2":"52","3":"0.06607370"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>By state</p>
+<pre class="r"><code>dat_wm %&gt;%
+  tabyl(state)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"BA","2":"28","3":"0.03557814"},{"1":"GO","2":"307","3":"0.39008895"},{"1":"MG","2":"75","3":"0.09529860"},{"1":"MS","2":"54","3":"0.06861499"},{"1":"MT","2":"27","3":"0.03430750"},{"1":"PR","2":"257","3":"0.32655654"},{"1":"RS","2":"16","3":"0.02033037"},{"1":"SP","2":"23","3":"0.02922490"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Table of fungicides and years.</p>
+<pre class="r"><code>dat_wm %&gt;%
+  tabyl(fungicide, year)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide"],"name":[1],"type":["chr"],"align":["left"]},{"label":["2008/2009"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["2009/2010"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["2010/2011"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["2011/2012"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["2012/2013"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["2013/2014"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["2014/2015"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["2015/2016"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["2016/2017"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["2017/2018"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK","2":"5","3":"8","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"CARB","2":"20","3":"8","4":"14","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"CARB+FLUZ","2":"0","3":"0","4":"0","5":"13","6":"8","7":"6","8":"0","9":"0","10":"0","11":"0"},{"1":"CARB+FLUZ+LIGN","2":"0","3":"0","4":"0","5":"0","6":"8","7":"6","8":"0","9":"0","10":"0","11":"0"},{"1":"CARB+LIGN","2":"0","3":"0","4":"0","5":"13","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"CARB+PROCY","2":"0","3":"0","4":"0","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"0"},{"1":"CYPRO","2":"0","3":"0","4":"0","5":"13","6":"8","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"CYPRO+FLUDI","2":"5","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"DIMO+BOSC","2":"5","3":"16","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FEG+IPRO","2":"0","3":"0","4":"0","5":"0","6":"0","7":"6","8":"0","9":"0","10":"0","11":"0"},{"1":"FLUO","2":"5","3":"16","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FLUZ","2":"5","3":"16","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FLUZ+CARB","2":"0","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"8"},{"1":"FLUZ+TIOF","2":"0","3":"0","4":"0","5":"13","6":"8","7":"6","8":"5","9":"0","10":"8","11":"8"},{"1":"IPRO","2":"0","3":"0","4":"0","5":"0","6":"8","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"ISOF","2":"0","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"8","11":"8"},{"1":"MOI+IPRO","2":"0","3":"0","4":"0","5":"0","6":"0","7":"6","8":"0","9":"0","10":"0","11":"0"},{"1":"OXICAR","2":"0","3":"0","4":"7","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"PENTH","2":"0","3":"16","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"PICOX","2":"0","3":"0","4":"0","5":"0","6":"0","7":"6","8":"5","9":"11","10":"0","11":"0"},{"1":"PICOX + PENTH","2":"0","3":"0","4":"7","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0"},{"1":"PROCY","2":"5","3":"8","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"TIOF","2":"5","3":"8","4":"12","5":"12","6":"1","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"TIOF+MET","2":"0","3":"0","4":"0","5":"0","6":"7","7":"0","8":"0","9":"0","10":"0","11":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dat_wm %&gt;%
+  tabyl(fungicide, n_spray)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide"],"name":[1],"type":["chr"],"align":["left"]},{"label":["0"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["3"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["4"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK","2":"74","3":"0","4":"0","5":"0"},{"1":"CARB","2":"0","3":"27","4":"0","5":"15"},{"1":"CARB+FLUZ","2":"0","3":"0","4":"27","5":"0"},{"1":"CARB+FLUZ+LIGN","2":"0","3":"0","4":"14","5":"0"},{"1":"CARB+LIGN","2":"0","3":"0","4":"13","5":"0"},{"1":"CARB+PROCY","2":"0","3":"27","4":"8","5":"12"},{"1":"CYPRO","2":"0","3":"21","4":"0","5":"0"},{"1":"CYPRO+FLUDI","2":"0","3":"5","4":"0","5":"0"},{"1":"DIMO+BOSC","2":"0","3":"74","4":"8","5":"0"},{"1":"FEG+IPRO","2":"0","3":"0","4":"6","5":"0"},{"1":"FLUO","2":"0","3":"74","4":"8","5":"0"},{"1":"FLUZ","2":"0","3":"74","4":"8","5":"0"},{"1":"FLUZ+CARB","2":"0","3":"8","4":"0","5":"0"},{"1":"FLUZ+TIOF","2":"0","3":"21","4":"27","5":"0"},{"1":"IPRO","2":"0","3":"8","4":"0","5":"0"},{"1":"ISOF","2":"0","3":"16","4":"0","5":"0"},{"1":"MOI+IPRO","2":"0","3":"0","4":"6","5":"0"},{"1":"OXICAR","2":"0","3":"7","4":"0","5":"0"},{"1":"PENTH","2":"0","3":"8","4":"8","5":"0"},{"1":"PICOX","2":"0","3":"22","4":"0","5":"0"},{"1":"PICOX + PENTH","2":"0","3":"7","4":"0","5":"0"},{"1":"PROCY","2":"0","3":"74","4":"0","5":"0"},{"1":"TIOF","2":"0","3":"11","4":"0","5":"62"},{"1":"TIOF+MET","2":"0","3":"0","4":"0","5":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>We want to select the fungicides which were tested in great number of studies. Looking at the table above, we will select all applied twice in at least 13 trials and those applied four times in at least 14 trials.</p>
+</div>
+</div>
+<div id="filter-fungicides" class="section level1">
+<h1>Filter fungicides</h1>
+<pre class="r"><code>target &lt;- c(&quot;AACHECK&quot;, &quot;CARB+PROCY&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUZ&quot;, &quot;FLUO&quot;, &quot;PROCY&quot;, &quot;TIOF&quot;)
+dat_wm2 &lt;- dat_wm %&gt;%
+  filter(fungicide %in% target) %&gt;% # nine fungicides
+  filter(n_spray %in% c(0, 2, 4))</code></pre>
+</div>
+<div id="create-fungicide-variables" class="section level1">
+<h1>Create fungicide variables</h1>
+<p>Here we will combine fungicide and number of sprays to create one level for fungicides with either two or four spray.</p>
+<pre class="r"><code>dat_wm2 &lt;- dat_wm2 %&gt;%
+  mutate(fungicide2 = paste(fungicide, n_spray, sep = &quot;-&quot;)) %&gt;%
+  filter(fungicide2 != &quot;TIOF-2&quot;) %&gt;%
+  filter(fungicide2 != &quot;CARB+PROCY-4&quot;)
+
+
+## Checking number of trials by year
+mofo_study &lt;- dat_wm2 %&gt;%
+  group_by(study) %&gt;%
+  filter(row_number() == 1)
+mofo_study</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["study"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["year"],"name":[2],"type":["chr"],"align":["left"]},{"label":["location"],"name":[3],"type":["chr"],"align":["left"]},{"label":["state"],"name":[4],"type":["chr"],"align":["left"]},{"label":["elevation"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["region"],"name":[6],"type":["chr"],"align":["left"]},{"label":["fungicide"],"name":[7],"type":["chr"],"align":["left"]},{"label":["n_spray"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["inc_check"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["inc"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["inc_mean"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["inc_cv"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["inc_qmr"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["sd_inc"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["scl_check"],"name":[15],"type":["chr"],"align":["left"]},{"label":["scl"],"name":[16],"type":["chr"],"align":["left"]},{"label":["scl_mean"],"name":[17],"type":["chr"],"align":["left"]},{"label":["scl_cv"],"name":[18],"type":["chr"],"align":["left"]},{"label":["scl_qmr"],"name":[19],"type":["chr"],"align":["left"]},{"label":["sd_scl"],"name":[20],"type":["chr"],"align":["left"]},{"label":["yld_check"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["yld"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["yld_mean"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["yld_cv"],"name":[24],"type":["dbl"],"align":["right"]},{"label":["yld_qmr"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["sd_yld"],"name":[26],"type":["dbl"],"align":["right"]},{"label":["design_yld"],"name":[27],"type":["dbl"],"align":["right"]},{"label":["design_scl"],"name":[28],"type":["dbl"],"align":["right"]},{"label":["design_inc"],"name":[29],"type":["dbl"],"align":["right"]},{"label":["fungicide2"],"name":[30],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"2008/2009","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"FLUO","8":"2","9":"76.00","10":"27.00","11":"39.20","12":"17.00","13":"86.7022750","14":"7.0710678","15":"2194","16":"643","17":"1098.5","18":"24","19":"262333.99","20":"191.3697882","21":"2265.00","22":"3044.00","23":"2772.800","24":"6.00","25":"34780.024","26":"189.12000","27":"3","28":"4","29":"2","30":"FLUO-2"},{"1":"2","2":"2008/2009","3":"São Miguel do Passa Quatro","4":"GO","5":"1031","6":"Northern","7":"PROCY","8":"2","9":"53.00","10":"16.00","11":"25.60","12":"53.00","13":"131.3851790","14":"6.5253705","15":"1331","16":"119","17":"497.2","18":"57","19":"103269.3","20":"112.5","21":"2257.00","22":"2614.00","23":"2493.800","24":"8.00","25":"37608.393","26":"347.41000","27":"3","28":"4","29":"2","30":"PROCY-2"},{"1":"3","2":"2008/2009","3":"Silvânia","4":"GO","5":"1050","6":"Northern","7":"FLUO","8":"2","9":"65.00","10":"23.00","11":"34.20","12":"38.00","13":"170.5034010","14":"12.7667537","15":"5013","16":"419","17":"2397.3","18":"65","19":"2801838.65","20":"374.3744783","21":"2839.00","22":"3652.00","23":"3381.300","24":"6.00","25":"32613.335","26":"150.94000","27":"3","28":"4","29":"2","30":"FLUO-2"},{"1":"4","2":"2008/2009","3":"Mauá da Serra","4":"PR","5":"1029","6":"Southern","7":"PROCY","8":"2","9":"69.00","10":"43.00","11":"39.80","12":"34.00","13":"169.0215670","14":"15.2837741","15":"6216","16":"1744","17":"2563.4","18":"51","19":"1659291.06","20":"258.2247083","21":"1893.00","22":"2367.00","23":"2472.500","24":"13.00","25":"98805.484","26":"268.63000","27":"3","28":"4","29":"2","30":"PROCY-2"},{"1":"5","2":"2008/2009","3":"Nova Ponte","4":"MG","5":"999","6":"Northern","7":"PROCY","8":"2","9":"21.00","10":"9.00","11":"12.00","12":"56.00","13":"18.5779780","14":"1.4142136","15":"8500","16":"3000","17":"6060.3","18":"50","19":"1378385.61","20":"144.3375673","21":"2476.00","22":"2576.00","23":"2512.600","24":"11.00","25":"75093.202","26":"313.06000","27":"3","28":"4","29":"2","30":"PROCY-2"},{"1":"6","2":"2009/2010","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"FLUO","8":"2","9":"90.30","10":"74.70","11":"71.00","12":"12.30","13":"76.2902500","14":"5.6250000","15":"2225","16":"541","17":"786.8","18":"74.9","19":"137554.55","20":"21.65063509","21":"2460.00","22":"3106.00","23":"3096.600","24":"7.20","25":"50030.770","26":"136.62000","27":"4","28":"5","29":"3","30":"FLUO-2"},{"1":"7","2":"2009/2010","3":"São Miguel do Passa Quatro","4":"GO","5":"1027","6":"Northern","7":"DIMO+BOSC","8":"2","9":"39.40","10":"5.00","11":"11.10","12":"56.10","13":"39.0019020","14":"2.9397237","15":"5653","16":"702","17":"2011.3","18":"40.7","19":"260992.05","20":"138.5847364","21":"3318.00","22":"3914.00","23":"3766.200","24":"9.00","25":"114744.283","26":"418.18000","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"8","2":"2009/2010","3":"Água Fria","4":"GO","5":"891","6":"Northern","7":"DIMO+BOSC","8":"2","9":"37.70","10":"1.10","11":"12.40","12":"33.30","13":"14.7263980","14":"2.1739130","15":"5092","16":"20","17":"2390.4","18":"108.4","19":"2612744.73","20":"18.75","21":"3729.00","22":"4090.00","23":"3981.500","24":"6.20","25":"61624.247","26":"264.18000","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"9","2":"2009/2010","3":"Campo Verde","4":"MT","5":"985","6":"Northern","7":"FLUO","8":"2","9":"43.70","10":"17.20","11":"23.10","12":"50.70","13":"130.7986110","14":"5.9839194","15":"461","16":"80","17":"206.3","18":"190.5","19":"63563.29","20":"78.09832878","21":"1833.00","22":"2224.00","23":"2298.000","24":"24.80","25":"327154.505","26":"847.99000","27":"5","28":"7","29":"4","30":"FLUO-2"},{"1":"10","2":"2009/2010","3":"Nova Ponte","4":"MG","5":"1005","6":"Northern","7":"FLUO","8":"2","9":"16.50","10":"NA","11":"4.40","12":"133.80","13":"35.1424900","14":"0.8403361","15":"1804","16":"261","17":"1318.1","18":"75.4","19":"387988.87","20":"143.9762712","21":"2940.00","22":"3169.00","23":"3202.800","24":"8.80","25":"80480.890","26":"114.22000","27":"4","28":"5","29":"5","30":"FLUO-2"},{"1":"11","2":"2009/2010","3":"Uberlândia","4":"MG","5":"947","6":"Northern","7":"TIOF","8":"4","9":"32.00","10":"8.20","11":"6.70","12":"47.20","13":"10.0404040","14":"3.0956959","15":"4370","16":"1764","17":"2711.2","18":"100.7","19":"2910397.73","20":"147.7258158","21":"2163.00","22":"3227.00","23":"2957.400","24":"12.20","25":"130887.781","26":"400.03000","27":"4","28":"5","29":"3","30":"TIOF-4"},{"1":"12","2":"2009/2010","3":"Pilar do Sul","4":"SP","5":"800","6":"Southern","7":"PROCY","8":"2","9":"55.00","10":"3.25","11":"11.50","12":"73.30","13":"80.3636400","14":"2.3629078","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"3351.00","22":"4780.00","23":"4546.900","24":"15.40","25":"387631.180","26":"1063.82000","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"13","2":"2009/2010","3":"Mauá da Serra","4":"PR","5":"909","6":"Southern","7":"DIMO+BOSC","8":"2","9":"40.60","10":"10.00","11":"18.70","12":"23.00","13":"18.6326150","14":"4.2542871","15":"2606","16":"241","17":"865.3","18":"40.7","19":"48419.07","20":"130.4858709","21":"1941.00","22":"2899.00","23":"2438.100","24":"14.60","25":"127321.956","26":"502.03000","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"14","2":"2010/2011","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"PROCY","8":"2","9":"43.10","10":"11.90","11":"19.80","12":"12.64","13":"28.3710110","14":"2.3935678","15":"2926","16":"430","17":"781.0","18":"17.53","19":"37399.93","20":"65.43189844","21":"3013.00","22":"3566.00","23":"3420.600","24":"7.33","25":"46277.776","26":"267.91863","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"15","2":"2010/2011","3":"São Miguel do Passa Quatro","4":"GO","5":"1027","6":"Northern","7":"PROCY","8":"2","9":"31.28","10":"10.63","11":"17.20","12":"15.71","13":"29.9955760","14":"2.3935678","15":"1736","16":"10","17":"486.4","18":"41.75","19":"151661.21","20":"20","21":"2464.00","22":"3236.00","23":"2929.300","24":"9.90","25":"42121.710","26":"265.04851","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"16","2":"2010/2011","3":"Silvânia","4":"GO","5":"1050","6":"Northern","7":"FLUO","8":"2","9":"36.80","10":"5.00","11":"14.60","12":"27.20","13":"30.8849160","14":"2.1275965","15":"4556","16":"166","17":"1766.7","18":"66.12","19":"2184348.29","20":"106.3014581","21":"2935.00","22":"4244.00","23":"4000.200","24":"8.60","25":"117429.612","26":"305.81712","27":"4","28":"5","29":"3","30":"FLUO-2"},{"1":"17","2":"2010/2011","3":"Água Fria","4":"GO","5":"891","6":"Northern","7":"PROCY","8":"2","9":"36.00","10":"4.00","11":"11.90","12":"12.69","13":"4.9456360","14":"0.6500000","15":"9480","16":"400","17":"4260.0","18":"30.22","19":"8351355.76","20":"189.2969449","21":"2847.00","22":"2996.00","23":"3418.100","24":"7.52","25":"65985.822","26":"261.74741","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"18","2":"2010/2011","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"TIOF","8":"4","9":"64.50","10":"46.30","11":"42.20","12":"14.64","13":"264.4424240","14":"22.7742545","15":"9380","16":"5120","17":"5127.3","18":"28.91","19":"7233103.39","20":"625.919352","21":"3652.00","22":"3727.00","23":"4083.300","24":"9.54","25":"151705.790","26":"341.38514","27":"4","28":"5","29":"3","30":"TIOF-4"},{"1":"19","2":"2010/2011","3":"Marilândia do Sul","4":"PR","5":"868","6":"Southern","7":"PROCY","8":"2","9":"15.40","10":"2.40","11":"6.70","12":"15.99","13":"4.9456360","14":"0.6500000","15":"5700","16":"800","17":"2104.0","18":"29.11","19":"4084133.53","20":"189.2969449","21":"2725.00","22":"2667.00","23":"2796.200","24":"12.38","25":"65985.015","26":"261.74741","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"20","2":"2011/2012","3":"São Miguel do Passa Quatro","4":"GO","5":"1027","6":"Northern","7":"FLUZ","8":"2","9":"42.10","10":"7.80","11":"14.50","12":"21.60","13":"10.4607420","14":"2.1422340","15":"3277","16":"2266","17":"1934.6","18":"47.2","19":"896316.45","20":"446.1992268","21":"1986.00","22":"2226.00","23":"2274.500","24":"13.20","25":"89704.967","26":"310.51338","27":"4","28":"5","29":"3","30":"FLUZ-2"},{"1":"21","2":"2011/2012","3":"Goianira","4":"GO","5":"737","6":"Northern","7":"DIMO+BOSC","8":"2","9":"34.70","10":"10.80","11":"17.40","12":"18.40","13":"10.2257310","14":"3.5434211","15":"3618","16":"24","17":"1311.1","18":"18.8","19":"101236.56","20":"48.75","21":"2786.00","22":"3704.00","23":"3300.900","24":"5.90","25":"38646.924","26":"191.95284","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"22","2":"2011/2012","3":"Uberlândia","4":"MG","5":"947","6":"Northern","7":"DIMO+BOSC","8":"2","9":"46.30","10":"23.30","11":"20.40","12":"23.10","13":"26.1666670","14":"3.8622101","15":"4308","16":"1242","17":"2067.5","18":"30.8","19":"1707125.76","20":"159.5349143","21":"2792.00","22":"3441.00","23":"3296.000","24":"7.30","25":"74708.673","26":"375.74579","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"23","2":"2011/2012","3":"Chapadão do Sul","4":"MS","5":"813","6":"Northern","7":"DIMO+BOSC","8":"2","9":"67.50","10":"8.80","11":"17.50","12":"44.60","13":"79.9242420","14":"4.7871355","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"2646.00","22":"3033.00","23":"3092.500","24":"12.60","25":"172027.208","26":"305.10992","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"24","2":"2011/2012","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"DIMO+BOSC","8":"2","9":"20.50","10":"5.50","11":"8.40","12":"50.90","13":"18.3166670","14":"2.0816660","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"2692.00","22":"3318.00","23":"2967.500","24":"9.00","25":"71177.845","26":"459.40255","27":"4","28":"5","29":"3","30":"DIMO+BOSC-2"},{"1":"25","2":"2011/2012","3":"Palmeira","4":"PR","5":"820","6":"Southern","7":"PROCY","8":"2","9":"55.00","10":"15.00","11":"18.70","12":"21.10","13":"21.0984850","14":"4.0824829","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"1451.00","22":"1728.00","23":"1631.500","24":"2.60","25":"1720.738","26":"50.70761","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"26","2":"2011/2012","3":"Palmeira","4":"PR","5":"820","6":"Southern","7":"TIOF","8":"4","9":"47.50","10":"15.00","11":"15.34","12":"NA","13":"8.8636360","14":"1.5000000","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"1438.00","22":"1494.00","23":"1601.000","24":"NA","25":"6986.295","26":"30.69691","27":"4","28":"5","29":"3","30":"TIOF-4"},{"1":"27","2":"2011/2012","3":"São Desiderio","4":"BA","5":"844","6":"Northern","7":"PROCY","8":"2","9":"100.00","10":"89.58","11":"92.80","12":"NA","13":"121.9486530","14":"15.7747454","15":"8892.00","16":"756.00","17":"2179.16","18":"NA","19":"267407.73","20":"83.47454702","21":"2369.00","22":"3097.00","23":"2817.000","24":"NA","25":"8761.826","26":"23.20690","27":"4","28":"5","29":"3","30":"PROCY-2"},{"1":"28","2":"2011/2012","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"FLUZ","8":"2","9":"24.38","10":"1.88","11":"5.83","12":"NA","13":"30.4867420","14":"2.3935678","15":"1226.1","16":"40.2","17":"402","18":"NA","19":"79746.68","20":"56.85138521","21":"3321.00","22":"4114.00","23":"3951.000","24":"NA","25":"33144.363","26":"93.27827","27":"4","28":"5","29":"3","30":"FLUZ-2"},{"1":"29","2":"2011/2012","3":"Campo Verde","4":"MT","5":"736","6":"Northern","7":"FLUZ","8":"2","9":"3.65","10":"0.35","11":"1.06","12":"NA","13":"6.5732560","14":"0.4009377","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"2648.00","22":"2984.00","23":"2734.000","24":"NA","25":"85847.102","26":"77.73325","27":"4","28":"5","29":"3","30":"FLUZ-2"},{"1":"30","2":"2011/2012","3":"Faxinal","4":"PR","5":"998","6":"Southern","7":"TIOF","8":"4","9":"36.75","10":"34.00","11":"21.91","12":"NA","13":"59.0085230","14":"15.3704262","15":"14956.00","16":"14428.00","17":"8053.09","18":"NA","19":"22602159.64","20":"5869.286158","21":"3099.00","22":"3368.00","23":"3572.000","24":"NA","25":"46821.549","26":"228.78879","27":"4","28":"5","29":"3","30":"TIOF-4"},{"1":"31","2":"2011/2012","3":"Capão Bonito","4":"SP","5":"730","6":"Southern","7":"FLUO","8":"2","9":"5.00","10":"0.50","11":"8.57","12":"NA","13":"2.2491060","14":"0.5000000","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"3656.00","22":"3675.00","23":"3496.000","24":"NA","25":"100117.471","26":"532.20366","27":"4","28":"NA","29":"3","30":"FLUO-2"},{"1":"32","2":"2012/2013","3":"Chapadão do Sul","4":"MS","5":"813","6":"Northern","7":"DIMO+BOSC","8":"2","9":"7.50","10":"0.50","11":"0.83","12":"NA","13":"6.9444444","14":"0.5000000","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"4111.81","22":"4211.87","23":"4226.800","24":"NA","25":"34965.780","26":"348.36446","27":"4","28":"NA","29":"3","30":"DIMO+BOSC-2"},{"1":"33","2":"2012/2013","3":"Rio Verde","4":"GO","5":"748","6":"Northern","7":"AACHECK","8":"0","9":"31.56","10":"31.56","11":"15.61","12":"NA","13":"25.4631076","14":"2.7716947","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"2","30":"AACHECK-0"},{"1":"34","2":"2012/2013","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"DIMO+BOSC","8":"2","9":"25.94","10":"9.06","11":"11.88","12":"NA","13":"13.0129419","14":"1.5728822","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"2187.38","22":"2199.24","23":"2228.250","24":"NA","25":"26214.690","26":"94.08139","27":"3","28":"NA","29":"2","30":"DIMO+BOSC-2"},{"1":"35","2":"2012/2013","3":"Jataí","4":"GO","5":"749","6":"Northern","7":"DIMO+BOSC","8":"2","9":"12.13","10":"0.50","11":"3.22","12":"NA","13":"22.2490530","14":"0.7071068","15":"3580.77","16":"107.69","17":"1077.56","18":"NA","19":"443665.65","20":"96.4866037","21":"3167.94","22":"3209.40","23":"3104.950","24":"NA","25":"113974.070","26":"521.72540","27":"3","28":"4","29":"2","30":"DIMO+BOSC-2"},{"1":"36","2":"2012/2013","3":"São Miguel do Passa Quatro","4":"GO","5":"1027","6":"Northern","7":"FLUO","8":"2","9":"7.23","10":"0.33","11":"1.45","12":"NA","13":"0.9201578","14":"0.6500000","15":"687.50","16":"18.75","17":"163.54","18":"NA","19":"58944.13","20":"23.93567769","21":"1872.39","22":"2506.97","23":"2196.910","24":"NA","25":"137943.420","26":"92.42418","27":"3","28":"4","29":"2","30":"FLUO-2"},{"1":"37","2":"2012/2013","3":"Faxinal","4":"PR","5":"820","6":"Southern","7":"FLUO","8":"2","9":"58.25","10":"22.00","11":"32.95","12":"NA","13":"74.4761865","14":"7.5311852","15":"7244.00","16":"2348.00","17":"4633.33","18":"NA","19":"2367271.212","20":"735.7445209","21":"3393.33","22":"4036.01","23":"3915.980","24":"NA","25":"153279.480","26":"250.18458","27":"3","28":"4","29":"2","30":"FLUO-2"},{"1":"38","2":"2012/2013","3":"Uberlândia","4":"MG","5":"947","6":"Northern","7":"FLUO","8":"2","9":"21.68","10":"0.50","11":"4.02","12":"NA","13":"5.4541477","14":"0.5000000","15":"7564.00","16":"NA","17":"952.55","18":"NA","19":"62501.9513","20":"0","21":"2988.75","22":"3410.00","23":"3212.130","24":"NA","25":"13242.530","26":"189.78058","27":"3","28":"6","29":"2","30":"FLUO-2"},{"1":"39","2":"2012/2013","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"DIMO+BOSC","8":"2","9":"14.69","10":"0.94","11":"5.39","12":"NA","13":"4.3096985","14":"0.6250000","15":"6729.63","16":"457.87","17":"3383.33","18":"NA","19":"7425961.778","20":"540.4116515","21":"4525.89","22":"5133.31","23":"4850.890","24":"NA","25":"63444.330","26":"305.28778","27":"3","28":"4","29":"2","30":"DIMO+BOSC-2"},{"1":"40","2":"2013/2014","3":"Chapadão do Sul","4":"MS","5":"813","6":"Northern","7":"CARB+PROCY","8":"2","9":"16.25","10":"0.50","11":"5.10","12":"NA","13":"40.8386752","14":"0.5000000","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"3279.33","22":"3678.50","23":"3561.560","24":"NA","25":"61232.220","26":"387.90990","27":"1","28":"NA","29":"1","30":"CARB+PROCY-2"},{"1":"41","2":"2013/2014","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"FLUZ","8":"2","9":"15.00","10":"1.00","11":"3.69","12":"NA","13":"10.5341880","14":"1.1547005","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"3236.64","22":"3683.93","23":"3484.510","24":"NA","25":"52647.000","26":"199.05800","27":"1","28":"NA","29":"1","30":"FLUZ-2"},{"1":"42","2":"2013/2014","3":"Mauá da Serra","4":"PR","5":"909","6":"Southern","7":"FLUZ","8":"2","9":"33.25","10":"2.50","11":"6.35","12":"NA","13":"25.1001603","14":"2.3385359","15":"4340.00","16":"796.00","17":"1119.38","18":"NA","19":"404994.8718","20":"194.62785","21":"3494.81","22":"3803.63","23":"3891.500","24":"NA","25":"81886.320","26":"389.04182","27":"1","28":"1","29":"1","30":"FLUZ-2"},{"1":"43","2":"2013/2014","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"CARB+PROCY","8":"2","9":"41.25","10":"4.06","11":"16.18","12":"NA","13":"80.7041266","14":"1.1967839","15":"4935.71","16":"1187.30","17":"2704.76","18":"NA","19":"1105826.636","20":"438.4248434","21":"2602.40","22":"2864.76","23":"2799.770","24":"NA","25":"53070.660","26":"319.39544","27":"1","28":"1","29":"1","30":"CARB+PROCY-2"},{"1":"44","2":"2013/2014","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"TIOF","8":"4","9":"10.50","10":"2.50","11":"2.42","12":"NA","13":"1.5480769","14":"0.5773503","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"2301.59","22":"2763.24","23":"3376.320","24":"NA","25":"45439.640","26":"216.34458","27":"1","28":"NA","29":"1","30":"TIOF-4"},{"1":"45","2":"2014/2015","3":"Rio Verde","4":"GO","5":"921","6":"Northern","7":"FLUZ","8":"2","9":"27.25","10":"5.50","11":"9.76","12":"NA","13":"44.0852597","14":"0.7071068","15":"354.17","16":"90.28","17":"157.8","18":"NA","19":"7622.7842","20":"11.12784907","21":"3757.15","22":"4231.36","23":"4107.890","24":"NA","25":"33928.180","26":"68.70833","27":"1","28":"1","29":"1","30":"FLUZ-2"},{"1":"46","2":"2014/2015","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"DIMO+BOSC","8":"2","9":"26.88","10":"4.06","11":"10.19","12":"NA","13":"39.2912946","14":"2.7716947","15":"2970.63","16":"1165.08","17":"1899.34","18":"NA","19":"713440.258","20":"664.9726525","21":"4042.64","22":"4583.63","23":"4284.320","24":"NA","25":"100104.950","26":"480.21617","27":"1","28":"1","29":"1","30":"DIMO+BOSC-2"},{"1":"47","2":"2014/2015","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"DIMO+BOSC","8":"2","9":"4.06","10":"1.56","11":"1.75","12":"NA","13":"44.0852597","14":"0.6250000","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"3468.10","22":"3881.22","23":"3854.470","24":"NA","25":"33928.180","26":"82.79471","27":"1","28":"NA","29":"1","30":"DIMO+BOSC-2"},{"1":"48","2":"2014/2015","3":"Mauá da Serra","4":"PR","5":"909","6":"Southern","7":"FLUO","8":"2","9":"10.75","10":"0.25","11":"2.89","12":"NA","13":"4.1469595","14":"0.5590170","15":"3312.00","16":"60.00","17":"554.44","18":"NA","19":"184773.8378","20":"46.9041576","21":"3963.96","22":"5099.09","23":"4627.930","24":"NA","25":"59776.590","26":"301.71792","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"49","2":"2015/2016","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"FLUO","8":"2","9":"36.25","10":"1.75","11":"8.89","12":"NA","13":"5.5427778","14":"0.5000000","15":"273.52","16":"49.11","17":"119.28","18":"NA","19":"1790.337","20":"19.04979681","21":"3362.93","22":"3783.70","23":"3725.000","24":"NA","25":"62701.100","26":"667.62545","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"50","2":"2015/2016","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"CARB+PROCY","8":"2","9":"50.92","10":"12.83","11":"18.94","12":"NA","13":"86.4943193","14":"5.0231688","15":"1031.88","16":"113.75","17":"353.22","18":"NA","19":"168361.5556","20":"101.0466064","21":"2539.56","22":"3742.08","23":"3385.490","24":"NA","25":"229754.700","26":"428.30638","27":"1","28":"1","29":"1","30":"CARB+PROCY-2"},{"1":"51","2":"2015/2016","3":"Silvânia","4":"GO","5":"1050","6":"Northern","7":"DIMO+BOSC","8":"2","9":"30.98","10":"14.40","11":"17.48","12":"NA","13":"2.7484889","14":"2.1556128","15":"2000.00","16":"275.00","17":"807.19","18":"NA","19":"373905.1111","20":"110","21":"1667.30","22":"2655.06","23":"2310.350","24":"NA","25":"65005.330","26":"168.90857","27":"1","28":"1","29":"1","30":"DIMO+BOSC-2"},{"1":"52","2":"2015/2016","3":"Silvânia","4":"GO","5":"1050","6":"Northern","7":"FLUO","8":"2","9":"27.23","10":"12.20","11":"15.58","12":"NA","13":"1.9600889","14":"0.6000000","15":"2025.00","16":"200.00","17":"996.56","18":"NA","19":"354610","20":"71.18052168","21":"1720.44","22":"2575.09","23":"2335.440","24":"NA","25":"63203.050","26":"255.45167","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"53","2":"2015/2016","3":"Uberlândia","4":"MG","5":"863","6":"Northern","7":"FLUZ","8":"2","9":"17.50","10":"0.50","11":"4.47","12":"NA","13":"7.0644444","14":"0.5000000","15":"1992.50","16":"NA","17":"549.86","18":"NA","19":"101515.0933","20":"0","21":"2738.75","22":"3045.00","23":"2819.690","24":"NA","25":"66956.280","26":"136.25956","27":"1","28":"2","29":"1","30":"FLUZ-2"},{"1":"54","2":"2015/2016","3":"Barreiras","4":"BA","5":"454","6":"Northern","7":"FLUO","8":"2","9":"29.29","10":"0.26","11":"8.09","12":"NA","13":"15.2627475","14":"0.5208333","15":"1261.90","16":"45.05","17":"482.85","18":"NA","19":"21572.7252","20":"27.82211351","21":"2375.60","22":"2635.83","23":"2535.150","24":"NA","25":"33058.130","26":"141.95458","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"55","2":"2015/2016","3":"Júlio de  Castilhos","4":"RS","5":"513","6":"Southern","7":"FLUO","8":"2","9":"28.75","10":"5.63","11":"16.25","12":"NA","13":"39.2777778","14":"3.1457643","15":"208.00","16":"37.00","17":"114.63","18":"NA","19":"11013.0311","20":"40.348482","21":"3255.14","22":"4026.28","23":"3627.600","24":"NA","25":"157323.530","26":"255.68941","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"56","2":"2015/2016","3":"Júlio de  Castilhos","4":"RS","5":"513","6":"Southern","7":"CARB+PROCY","8":"2","9":"41.25","10":"6.88","11":"11.76","12":"NA","13":"65.7256944","14":"7.1807033","15":"7091.75","16":"674.00","17":"2109.66","18":"NA","19":"3836818.233","20":"550.0957492","21":"3434.39","22":"3645.76","23":"3606.860","24":"NA","25":"47108.990","26":"164.83757","27":"1","28":"1","29":"1","30":"CARB+PROCY-2"},{"1":"57","2":"2015/2016","3":"Mauá da Serra","4":"PR","5":"909","6":"Southern","7":"DIMO+BOSC","8":"2","9":"23.44","10":"3.13","11":"10.48","12":"NA","13":"14.9190278","14":"1.2500000","15":"770.00","16":"95.00","17":"290.94","18":"NA","19":"25410","20":"68.06859286","21":"2868.09","22":"3400.12","23":"3237.210","24":"NA","25":"60708.080","26":"440.01624","27":"1","28":"1","29":"1","30":"DIMO+BOSC-2"},{"1":"58","2":"2015/2016","3":"Faxinal","4":"PR","5":"820","6":"Southern","7":"FLUO","8":"2","9":"13.13","10":"0.50","11":"3.63","12":"NA","13":"6.9965278","14":"0.5000000","15":"570.00","16":"NA","17":"246.67","18":"NA","19":"23558.2222","20":"0","21":"4078.66","22":"4424.58","23":"4408.890","24":"NA","25":"217894.500","26":"452.88631","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"59","2":"2016/2017","3":"Ponta Grossa","4":"PR","5":"1021","6":"Southern","7":"TIOF","8":"4","9":"3.75","10":"2.50","11":"1.25","12":"NA","13":"1.1633929","14":"1.2909944","15":"77.18","16":"22.94","17":"36.41","18":"NA","19":"2061.9019","20":"16.48884733","21":"4488.05","22":"4898.56","23":"4721.340","24":"NA","25":"142638.920","26":"709.79984","27":"1","28":"1","29":"1","30":"TIOF-4"},{"1":"60","2":"2016/2017","3":"Pitanga","4":"PR","5":"952","6":"Southern","7":"CARB+PROCY","8":"2","9":"46.50","10":"3.00","11":"13.94","12":"NA","13":"4.7464286","14":"0.8164966","15":"8333.33","16":"1180.55","17":"4376.99","18":"NA","19":"955080.7467","20":"146.1074848","21":"3484.49","22":"4774.43","23":"4146.620","24":"NA","25":"60015.540","26":"205.82725","27":"1","28":"1","29":"1","30":"CARB+PROCY-2"},{"1":"61","2":"2016/2017","3":"Silvânia","4":"GO","5":"1050","6":"Northern","7":"FLUZ","8":"2","9":"53.44","10":"20.94","11":"26.34","12":"NA","13":"5.2678571","14":"2.7716947","15":"2900.00","16":"350.00","17":"1058.33","18":"NA","19":"1374750","20":"191.4854216","21":"2098.05","22":"3621.30","23":"3324.960","24":"NA","25":"24159.540","26":"295.41101","27":"1","28":"1","29":"1","30":"FLUZ-2"},{"1":"62","2":"2016/2017","3":"Uberlândia","4":"MG","5":"863","6":"Northern","7":"FLUO","8":"2","9":"23.75","10":"2.50","11":"6.57","12":"NA","13":"21.6973214","14":"1.7320508","15":"902.50","16":"85.00","17":"233.67","18":"NA","19":"29060.892","20":"34.15650255","21":"3220.00","22":"4095.00","23":"3895.000","24":"NA","25":"16247.860","26":"98.82645","27":"1","28":"1","29":"1","30":"FLUO-2"},{"1":"63","2":"2016/2017","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"FLUZ","8":"2","9":"82.00","10":"23.75","11":"34.45","12":"NA","13":"75.7022924","14":"5.2041650","15":"9051.25","16":"1990.63","17":"3952.81","18":"NA","19":"3729966.747","20":"1374.350415","21":"2855.72","22":"4305.23","23":"3907.530","24":"NA","25":"141349.330","26":"338.24146","27":"1","28":"1","29":"1","30":"FLUZ-2"},{"1":"64","2":"2016/2017","3":"Chapadão do Sul","4":"MS","5":"813","6":"Northern","7":"DIMO+BOSC","8":"2","9":"54.08","10":"3.75","11":"22.64","12":"NA","13":"85.2706518","14":"4.7871355","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"3893.44","22":"4274.40","23":"4122.230","24":"NA","25":"57527.340","26":"125.32559","27":"2","28":"NA","29":"1","30":"DIMO+BOSC-2"},{"1":"65","2":"2016/2017","3":"Palmeira","4":"PR","5":"865","6":"Southern","7":"CARB+PROCY","8":"2","9":"14.69","10":"4.69","11":"4.86","12":"NA","13":"4.5744978","14":"1.8750000","15":"40.12","16":"28.40","17":"46.00","18":"NA","19":"61.7733","20":"5.963529525","21":"3014.52","22":"3078.79","23":"3327.680","24":"NA","25":"18324.000","26":"76.78435","27":"1","28":"1","29":"1","30":"CARB+PROCY-2"},{"1":"66","2":"2016/2017","3":"Mauá da Serra","4":"PR","5":"909","6":"Southern","7":"FLUZ","8":"2","9":"11.88","10":"2.82","11":"3.33","12":"NA","13":"3.3602294","14":"1.1756505","15":"1205.00","16":"150.00","17":"285.28","18":"NA","19":"72632.8571","20":"129.0994449","21":"3555.59","22":"4062.14","23":"4077.280","24":"NA","25":"81653.480","26":"518.97561","27":"1","28":"1","29":"1","30":"FLUZ-2"},{"1":"67","2":"2017/2018","3":"Mauá da Serra","4":"PR","5":"909","6":"Southern","7":"AACHECK","8":"0","9":"20.31","10":"20.31","11":"4.15","12":"NA","13":"NA","14":"2.1300000","15":"2470","16":"2470","17":"408.5","18":"NA","19":"NA","20":"1016.98","21":"3571.60","22":"3571.60","23":"3965.748","24":"NA","25":"NA","26":"308.94000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"68","2":"2017/2018","3":"Chapadão do Sul","4":"MS","5":"813","6":"Northern","7":"AACHECK","8":"0","9":"28.75","10":"28.75","11":"7.06","12":"NA","13":"NA","14":"11.8100000","15":"-","16":"-","17":"-","18":"-","19":"-","20":"-","21":"3851.99","22":"3851.99","23":"4124.900","24":"NA","25":"NA","26":"541.60000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"69","2":"2017/2018","3":"Rio Verde","4":"GO","5":"921","6":"Northern","7":"AACHECK","8":"0","9":"22.81","10":"22.81","11":"6.93","12":"NA","13":"NA","14":"4.7100000","15":"17856.3","16":"17856.3","17":"3604.381","18":"NA","19":"NA","20":"5698.62","21":"4813.12","22":"4813.12","23":"5128.300","24":"NA","25":"NA","26":"98.51000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"70","2":"2017/2018","3":"Montividiu","4":"GO","5":"921","6":"Northern","7":"AACHECK","8":"0","9":"90.00","10":"90.00","11":"40.65","12":"NA","13":"NA","14":"12.2400000","15":"3384.4","16":"3384.37","17":"2058.747","18":"NA","19":"NA","20":"1549.64","21":"3412.30","22":"3412.30","23":"3969.100","24":"NA","25":"NA","26":"306.68000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"71","2":"2017/2018","3":"Silvânia","4":"GO","5":"1050","6":"Northern","7":"AACHECK","8":"0","9":"77.18","10":"77.18","11":"31.56","12":"NA","13":"NA","14":"3.2800000","15":"14360.0","16":"14360","17":"6631.75","18":"NA","19":"NA","20":"2785.29","21":"3197.00","22":"3197.00","23":"4809.450","24":"NA","25":"NA","26":"104.68000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"72","2":"2017/2018","3":"Pitanga","4":"PR","5":"952","6":"Southern","7":"AACHECK","8":"0","9":"26.00","10":"26.00","11":"4.45","12":"NA","13":"NA","14":"5.4100000","15":"2916.66","16":"2916.66","17":"527.073","18":"NA","19":"NA","20":"1839.07","21":"3318.90","22":"3318.90","23":"3652.800","24":"NA","25":"NA","26":"71.25000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"73","2":"2017/2018","3":"São Desiderio","4":"BA","5":"844","6":"Northern","7":"AACHECK","8":"0","9":"70.62","10":"70.62","11":"26.40","12":"NA","13":"NA","14":"6.8800000","15":"9507.5","16":"9507.5","17":"4157.325","18":"NA","19":"NA","20":"1521.41","21":"3334.60","22":"3334.60","23":"4158.400","24":"NA","25":"NA","26":"204.33000","27":"4","28":"8","29":"3","30":"AACHECK-0"},{"1":"74","2":"2017/2018","3":"São Miguel do Passa Quatro","4":"GO","5":"1027","6":"Northern","7":"AACHECK","8":"0","9":"66.56","10":"66.56","11":"26.43","12":"NA","13":"NA","14":"4.0000000","15":"7580","16":"7580","17":"3830.925","18":"NA","19":"NA","20":"666.53","21":"2614.50","22":"2614.50","23":"4220.750","24":"NA","25":"NA","26":"123.40000","27":"4","28":"8","29":"3","30":"AACHECK-0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div id="create-datasets" class="section level2">
+<h2>Create datasets</h2>
+<p>Let’s keep the most important variables together with mean, sampling variance and standard deviation for each of the variables. We will also save each file as a separate <code>csv</code> file and save in <code>data</code> folder.</p>
+<div id="incidence" class="section level3">
+<h3>Incidence</h3>
+<pre class="r"><code>dat_wm_inc &lt;- dat_wm2 %&gt;%
+  select(1:9, 10, 13, 14, 27, 29, 30) %&gt;%
+  group_by(study, year, location, state, elevation, region, inc_check, fungicide2, design_inc) %&gt;%
+  summarise(
+    mean_inc = mean(inc),
+    mean_inc_qmr = mean(inc_qmr),
+    mean_inc_sd = mean(sd_inc)
+  ) %&gt;%
+  filter(mean_inc != &quot;NA&quot;)
+
+library(readr)
+write_csv(dat_wm_inc, &quot;data/dat-inc.csv&quot;)
+
+dat_wm_inc %&gt;%
+  tabyl(fungicide2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"74","3":"0.16228070"},{"1":"CARB+PROCY-2","2":"27","3":"0.05921053"},{"1":"DIMO+BOSC-2","2":"72","3":"0.15789474"},{"1":"FLUO-2","2":"73","3":"0.16008772"},{"1":"FLUZ-2","2":"74","3":"0.16228070"},{"1":"PROCY-2","2":"74","3":"0.16228070"},{"1":"TIOF-4","2":"62","3":"0.13596491"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Let’s see the number of studies per each fungicide</p>
+<pre class="r"><code>inc_map &lt;- dat_wm_inc %&gt;%
+  select(3, 7) %&gt;%
+  group_by(location) %&gt;%
+  summarise(mean_check = mean(inc_check))</code></pre>
+<pre><code>## Adding missing grouping variables: `study`, `year`, `state`, `elevation`, `region`, `fungicide2`</code></pre>
+<pre class="r"><code>dat_wm_inc %&gt;%
+  tabyl(fungicide2, year)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["2008/2009"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["2009/2010"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["2010/2011"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["2011/2012"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["2012/2013"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["2013/2014"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["2014/2015"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["2015/2016"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["2016/2017"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["2017/2018"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"5","3":"8","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"CARB+PROCY-2","2":"0","3":"0","4":"0","5":"0","6":"0","7":"5","8":"4","9":"10","10":"8","11":"0"},{"1":"DIMO+BOSC-2","2":"5","3":"6","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FLUO-2","2":"5","3":"7","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FLUZ-2","2":"5","3":"8","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"PROCY-2","2":"5","3":"8","4":"6","5":"12","6":"8","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"TIOF-4","2":"0","3":"8","4":"6","5":"12","6":"1","7":"5","8":"4","9":"10","10":"8","11":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dat_wm_inc %&gt;%
+  tabyl(fungicide2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"74","3":"0.16228070"},{"1":"CARB+PROCY-2","2":"27","3":"0.05921053"},{"1":"DIMO+BOSC-2","2":"72","3":"0.15789474"},{"1":"FLUO-2","2":"73","3":"0.16008772"},{"1":"FLUZ-2","2":"74","3":"0.16228070"},{"1":"PROCY-2","2":"74","3":"0.16228070"},{"1":"TIOF-4","2":"62","3":"0.13596491"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="sclerotia-mass" class="section level3">
+<h3>Sclerotia mass</h3>
+<pre class="r"><code>dat_wm_scl &lt;- dat_wm2 %&gt;%
+  select(1:9, 15:16, 19:20, 28, 30) %&gt;%
+  mutate(
+    scl = as.numeric(scl),
+    scl_check = as.numeric(scl_check),
+    scl_qmr = as.numeric(scl_qmr),
+    sd_scl = as.numeric(sd_scl)
+  ) %&gt;%
+  group_by(study, year, location, state, elevation, region, fungicide2, inc_check, scl_check, design_scl) %&gt;%
+  summarise(
+    mean_scl = mean(scl),
+    mean_scl_qmr = mean(scl_qmr),
+    mean_scl_sd = mean(sd_scl)
+  ) %&gt;%
+  filter(mean_scl != &quot;NA&quot;) %&gt;%
+  filter(mean_scl &gt; 0)</code></pre>
+<pre><code>## Warning in evalq(as.numeric(scl), &lt;environment&gt;): NAs introduced by
+## coercion</code></pre>
+<pre><code>## Warning in evalq(as.numeric(scl_check), &lt;environment&gt;): NAs introduced by
+## coercion</code></pre>
+<pre><code>## Warning in evalq(as.numeric(scl_qmr), &lt;environment&gt;): NAs introduced by
+## coercion</code></pre>
+<pre><code>## Warning in evalq(as.numeric(sd_scl), &lt;environment&gt;): NAs introduced by
+## coercion</code></pre>
+<pre class="r"><code>library(readr)
+write_csv(dat_wm_scl, &quot;data/dat-scl.csv&quot;)</code></pre>
+<pre class="r"><code>dat_wm_scl %&gt;%
+  tabyl(fungicide2, year)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["2008/2009"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["2009/2010"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["2010/2011"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["2011/2012"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["2012/2013"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["2013/2014"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["2014/2015"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["2015/2016"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["2016/2017"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["2017/2018"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"5","3":"7","4":"6","5":"6","6":"5","7":"2","8":"3","9":"10","10":"7","11":"7"},{"1":"CARB+PROCY-2","2":"0","3":"0","4":"0","5":"0","6":"0","7":"2","8":"3","9":"10","10":"7","11":"0"},{"1":"DIMO+BOSC-2","2":"5","3":"6","4":"6","5":"6","6":"5","7":"2","8":"3","9":"9","10":"7","11":"5"},{"1":"FLUO-2","2":"5","3":"7","4":"6","5":"6","6":"4","7":"2","8":"3","9":"9","10":"7","11":"5"},{"1":"FLUZ-2","2":"5","3":"7","4":"6","5":"6","6":"4","7":"2","8":"3","9":"9","10":"7","11":"7"},{"1":"PROCY-2","2":"5","3":"7","4":"6","5":"6","6":"5","7":"2","8":"3","9":"10","10":"7","11":"7"},{"1":"TIOF-4","2":"0","3":"7","4":"6","5":"6","6":"0","7":"2","8":"3","9":"10","10":"7","11":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dat_wm_scl %&gt;%
+  tabyl(fungicide2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"58","3":"0.16571429"},{"1":"CARB+PROCY-2","2":"22","3":"0.06285714"},{"1":"DIMO+BOSC-2","2":"54","3":"0.15428571"},{"1":"FLUO-2","2":"54","3":"0.15428571"},{"1":"FLUZ-2","2":"56","3":"0.16000000"},{"1":"PROCY-2","2":"58","3":"0.16571429"},{"1":"TIOF-4","2":"48","3":"0.13714286"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="yield" class="section level3">
+<h3>Yield</h3>
+<pre class="r"><code>dat_wm_yld &lt;- dat_wm2 %&gt;%
+  select(1:10, 15:16, 21, 22, 25, 26, 27, 30) %&gt;%
+  group_by(study, year, location, state, elevation, region, inc_check, inc, scl_check, scl, yld_check, design_yld, fungicide2) %&gt;%
+  summarise(
+    mean_yld = mean(yld),
+    mean_yld_qmr = mean(yld_qmr),
+    mean_yld_sd = mean(sd_yld)
+  ) %&gt;%
+  filter(mean_yld &gt; 0) %&gt;%
+  filter(mean_yld_sd &gt; 0) %&gt;%
+  filter(mean_yld != &quot;NA&quot;)
+
+library(readr)
+write_csv(dat_wm_yld, &quot;data/dat-yld.csv&quot;)</code></pre>
+<pre class="r"><code>dat_wm_yld %&gt;%
+  tabyl(fungicide2, year)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["2008/2009"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["2009/2010"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["2010/2011"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["2011/2012"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["2012/2013"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["2013/2014"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["2014/2015"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["2015/2016"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["2016/2017"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["2017/2018"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"5","3":"8","4":"6","5":"12","6":"7","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"CARB+PROCY-2","2":"0","3":"0","4":"0","5":"0","6":"0","7":"5","8":"4","9":"10","10":"8","11":"0"},{"1":"DIMO+BOSC-2","2":"5","3":"7","4":"6","5":"12","6":"7","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FLUO-2","2":"5","3":"8","4":"6","5":"12","6":"7","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"FLUZ-2","2":"5","3":"8","4":"6","5":"12","6":"7","7":"5","8":"4","9":"10","10":"8","11":"8"},{"1":"PROCY-2","2":"5","3":"8","4":"6","5":"12","6":"7","7":"5","8":"4","9":"10","10":"7","11":"8"},{"1":"TIOF-4","2":"0","3":"8","4":"6","5":"12","6":"1","7":"5","8":"4","9":"10","10":"8","11":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dat_wm_yld %&gt;%
+  tabyl(fungicide2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["fungicide2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"AACHECK-0","2":"73","3":"0.16150442"},{"1":"CARB+PROCY-2","2":"27","3":"0.05973451"},{"1":"DIMO+BOSC-2","2":"72","3":"0.15929204"},{"1":"FLUO-2","2":"73","3":"0.16150442"},{"1":"FLUZ-2","2":"73","3":"0.16150442"},{"1":"PROCY-2","2":"72","3":"0.15929204"},{"1":"TIOF-4","2":"62","3":"0.13716814"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</div>
+
+
+
+Copyright 2017 Emerson Del Ponte
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

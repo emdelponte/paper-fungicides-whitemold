@@ -1,0 +1,236 @@
+# Data 
+
+The data used in this analysis were obtained from the network of cooperative trials for evaluating fungicide efficacy on the reduction of white mold of soybean and yield response. The experiments were conducted in the main soybean growing regions of Brazil where white mold causes significant losses. 
+
+The primary data has been published as annual reports that summarized either a mean value for the treatments across all experiments for the year or, in some years, the mean values at the trial level. 
+
+There are three respnse variables of our interest in the studies:
+
+- **White mold incidence** (%, **inc**): proportion of plants affected
+- **Post-harvest sclerotia mass** (g/ha, **scl**): sclerotia weight
+- **Crop yield** (kg/ha, **yld**): grain weight at 13% humidity
+
+The original spreadsheets from each trial were obtained from collaborators and the data used for the analysis were organized in a single spreadsheet where each row represents a treatment within a trial (study). Each trial was conducted in a randomized complete block design with four replicates. A preliminary analysis were conducted (not shown) to obtain the treatment means for each variable. The sampling variance for the study (trial) was obtained by fitting an Anova model for the raw data and using the mean square error (MSE) to calculate the sampling variance. Additionally, for each treament, the standard deviation (four blocks) was calculated for each variable during the data preparation step. 
+
+## Data import 
+
+The full data was stored in a GoogleSheet. Let's import the data using the `gsheet` package.
+
+```{r message=FALSE, warning=FALSE}
+Sys.setlocale("LC_ALL", "pt_BR.UTF-8") # set UT-8 for displaying names correctly
+
+library(gsheet)
+dat_wm <- gsheet2tbl(
+  "https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit?usp=sharing"
+)
+```
+
+## Exploratory analysis
+
+
+```{r}
+dplyr::glimpse(dat_wm)
+```
+
+Let's reduce the number of columns by selecting the most important variables for our analysis.
+
+```{r}
+library(tidyverse) # for using pipes
+dat_wm <- dat_wm %>%
+  select(1:6, 9, 13:31, 34:36)
+```
+
+
+## Data exploration
+
+The analysis of the raw data shows that multiple entries of the same fungicide, applied in same number of spray, were found in some of the trials. Let's find these duplicate entries in a same trial to later summarize as one entry per trial.
+
+```{r}
+library(janitor)
+dat_wm %>%
+  get_dupes(fungicide, study, n_spray)
+```
+
+
+
+## Data exploration
+
+Number of treatments per year.
+
+```{r}
+library(janitor) # for data cleaning and summary
+dat_wm %>%
+  tabyl(year)
+```
+
+By location
+
+```{r}
+dat_wm %>%
+  tabyl(location)
+```
+
+
+By state
+
+```{r}
+dat_wm %>%
+  tabyl(state)
+```
+
+
+Table of fungicides and years.
+
+```{r}
+dat_wm %>%
+  tabyl(fungicide, year)
+```
+
+```{r}
+dat_wm %>%
+  tabyl(fungicide, n_spray)
+```
+
+We want to select the fungicides which were tested in great number of studies. Looking at the table above, we will select all applied twice in at least 13 trials and those applied four times in at least 14 trials.
+
+
+# Filter fungicides
+
+```{r}
+target <- c("AACHECK", "CARB+PROCY", "DIMO+BOSC", "FLUZ", "FLUO", "PROCY", "TIOF")
+dat_wm2 <- dat_wm %>%
+  filter(fungicide %in% target) %>% # nine fungicides
+  filter(n_spray %in% c(0, 2, 4))
+```
+
+# Create fungicide variables
+
+Here we will combine fungicide and number of sprays to create one level for fungicides with either two or four spray. 
+
+```{r}
+dat_wm2 <- dat_wm2 %>%
+  mutate(fungicide2 = paste(fungicide, n_spray, sep = "-")) %>%
+  filter(fungicide2 != "TIOF-2") %>%
+  filter(fungicide2 != "CARB+PROCY-4")
+
+
+## Checking number of trials by year
+mofo_study <- dat_wm2 %>%
+  group_by(study) %>%
+  filter(row_number() == 1)
+mofo_study
+```
+
+
+## Create datasets
+
+Let's keep the most important variables together with mean, sampling variance and standard deviation for each of the variables. We will also save each file as a separate `csv` file and save in `data` folder.
+
+### Incidence 
+
+```{r}
+dat_wm_inc <- dat_wm2 %>%
+  select(1:9, 10, 13, 14, 27, 29, 30) %>%
+  group_by(study, year, location, state, elevation, region, inc_check, fungicide2, design_inc) %>%
+  summarise(
+    mean_inc = mean(inc),
+    mean_inc_qmr = mean(inc_qmr),
+    mean_inc_sd = mean(sd_inc)
+  ) %>%
+  filter(mean_inc != "NA")
+
+library(readr)
+write_csv(dat_wm_inc, "data/dat-inc.csv")
+
+dat_wm_inc %>%
+  tabyl(fungicide2)
+```
+
+Let's see the number of studies per each fungicide
+
+```{r}
+
+inc_map <- dat_wm_inc %>%
+  select(3, 7) %>%
+  group_by(location) %>%
+  summarise(mean_check = mean(inc_check))
+
+dat_wm_inc %>%
+  tabyl(fungicide2, year)
+
+dat_wm_inc %>%
+  tabyl(fungicide2)
+```
+
+
+
+### Sclerotia mass
+
+
+```{r}
+
+dat_wm_scl <- dat_wm2 %>%
+  select(1:9, 15:16, 19:20, 28, 30) %>%
+  mutate(
+    scl = as.numeric(scl),
+    scl_check = as.numeric(scl_check),
+    scl_qmr = as.numeric(scl_qmr),
+    sd_scl = as.numeric(sd_scl)
+  ) %>%
+  group_by(study, year, location, state, elevation, region, fungicide2, inc_check, scl_check, design_scl) %>%
+  summarise(
+    mean_scl = mean(scl),
+    mean_scl_qmr = mean(scl_qmr),
+    mean_scl_sd = mean(sd_scl)
+  ) %>%
+  filter(mean_scl != "NA") %>%
+  filter(mean_scl > 0)
+library(readr)
+write_csv(dat_wm_scl, "data/dat-scl.csv")
+```
+
+
+
+```{r}
+dat_wm_scl %>%
+  tabyl(fungicide2, year)
+
+dat_wm_scl %>%
+  tabyl(fungicide2)
+```
+
+### Yield
+
+
+```{r}
+dat_wm_yld <- dat_wm2 %>%
+  select(1:10, 15:16, 21, 22, 25, 26, 27, 30) %>%
+  group_by(study, year, location, state, elevation, region, inc_check, inc, scl_check, scl, yld_check, design_yld, fungicide2) %>%
+  summarise(
+    mean_yld = mean(yld),
+    mean_yld_qmr = mean(yld_qmr),
+    mean_yld_sd = mean(sd_yld)
+  ) %>%
+  filter(mean_yld > 0) %>%
+  filter(mean_yld_sd > 0) %>%
+  filter(mean_yld != "NA")
+
+library(readr)
+write_csv(dat_wm_yld, "data/dat-yld.csv")
+```
+
+
+
+```{r}
+dat_wm_yld %>%
+  tabyl(fungicide2, year)
+
+dat_wm_yld %>%
+  tabyl(fungicide2)
+```
+
+
+
+
+
+

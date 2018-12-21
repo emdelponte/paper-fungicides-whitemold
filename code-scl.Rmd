@@ -1,0 +1,196 @@
+% Code
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+
+# Network model
+
+Let's fit an arm-based model using the `rma.mv` function of metafor to get the estimates for each treatment.
+
+
+```{r}
+library(tidyverse)
+wm_scl <- read.csv("data/dat-scl.csv", h = T, sep = ",")
+
+
+# create the log of the inc variable
+wm_scl <- wm_scl %>%
+  mutate(log_scl = log(mean_scl))
+
+# create the sampling variance for the log of inc
+wm_scl$vi <- with(wm_scl, (mean_scl_sd^2) / (4 * mean_scl^2))
+```
+
+
+Now we will fit models with CS, HCS and UN matrix-covariance structure. We will then compare them with the Anova to choose among the best model.
+
+```{r}
+
+library(metafor)
+
+
+mv_scl_HCS <- rma.mv(log_scl, vi,
+  mods = ~fungicide2,
+  random = list(~fungicide2 | study),
+  struct = "HCS",
+  method = "ML",
+  data = wm_scl
+)
+
+mv_scl <- rma.mv(log_scl, vi,
+  mods = ~fungicide2,
+  random = list(~fungicide2 | study),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_scl
+)
+
+mv_scl
+```
+
+
+We can see below that the UN structure is a better model.
+
+```{r}
+
+anova(mv_scl_HCS, mv_scl)
+AIC(mv_scl_HCS)
+```
+
+Let's back-transform (exponential) the estimated mean (and respective 95%CIs) difference of the logs to obtain the response ratio, which is further expressed as percent reduction in sclerotia mass relative to the check treatment (control efficacy) for each fungicide. 
+
+```{r}
+efficacy_scl <- data.frame(cbind(
+  (1 - exp(mv_scl$b)) * 100,
+  (1 - exp(mv_scl$ci.lb)) * 100,
+  (1 - exp(mv_scl$ci.ub)) * 100
+))
+efficacy_scl
+```
+
+We can set linear contrasts between treatments of interest and get the P-valued using the `anova` function.
+
+```{r}
+anova(mv_scl, L = rbind(
+  c(0, 1, -1, 0, 0, 0, 0),
+  c(0, 1, 0, -1, 0, 0, 0),
+  c(0, 1, 0, 0, -1, 0, 0),
+  c(0, 1, 0, 0, 0, -1, 0),
+  c(0, 1, 0, 0, 0, 0, -1),
+  c(0, 0, 1, -1, 0, 0, 0),
+  c(0, 0, 1, 0, -1, 0, 0),
+  c(0, 0, 1, 0, 0, -1, 0),
+  c(0, 0, 1, 0, 0, 0, -1),
+  c(0, 0, 0, 1, -1, 0, 0),
+  c(0, 0, 0, 1, 0, -1, 0),
+  c(0, 0, 0, 1, 0, 0, -1),
+  c(0, 0, 0, 0, 1, -1, 0),
+  c(0, 0, 0, 0, 1, 0, -1),
+  c(0, 0, 0, 0, 0, 1, -1)
+))
+```
+
+
+## Inconsistency 
+
+In a network meta-analysis, it is important to check whether the results are consistent across the different designs. We included this variable manually in the original dataset and tested the interaction effect of treatments and design group.
+
+```{r}
+
+mv_scl_incon <- rma.mv(log_scl, vi,
+  mods = ~fungicide2 * design_scl,
+  random = list(~factor(study) | design_scl / fungicide2),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_scl
+)
+
+anova(mv_scl_incon, btt = 9:14)
+
+anova(mv_scl, mv_scl_incon)
+```
+
+
+## Network Graph
+
+
+ 
+
+First we  will rename the treatments with the number of trials (within parenthesis) that each treatment was present.
+
+```{r, warning=FALSE}
+library(readr)
+library(tidyverse)
+
+wm_scl <- read_csv("data/dat-scl.csv")
+
+library(plyr)
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("AACHECK-0" = "CHECK (58)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC (54)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("FLUO-2" = "FLUO (54)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("FLUZ-2" = "FLUZ (56)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("PROCY-2" = "PROC (58)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("TIOF-4" = "TIOF (48)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("CARB+PROCY-2" = "CARB+PROC (22)"))
+detach("package:plyr", unload = TRUE)
+```
+
+
+
+
+We need to prepare the data to get the network graph. Thus, we used the package `netmeta` with the function `pairwise` to calculate the contrasts.
+
+```{r message=FALSE, warning=FALSE}
+
+library(netmeta)
+pair_scl <- pairwise(
+  treat = fungicide2,
+  n = 4,
+  mean = mean_scl,
+  sd = mean_scl_sd,
+  studlab = study,
+  data = wm_scl,
+  sm = "ROM"
+)
+```
+
+```{r}
+net_scl <- netmeta(TE, seTE, treat1, treat2, studlab, data = pair_scl, sm = "ROM", backtransf = TRUE)
+summary(net_scl)
+```
+
+
+
+A network graph is composed of nodes (fungicide treatments) and edges or links between two treatments directly compared in a same trial. This graph allows to visualize how the treatments relate to each other and the number of direct comparisons can be depicted by the thickness of the edges, but also with numbers presented at the top of the links. 
+
+```{r}
+
+
+netgraph(net_scl,
+  plastic = FALSE,
+  col = "gray",
+  thickness = "number.of.studies",
+  points = TRUE,
+  col.points = "black",
+  cex.points = c("CARB+PROC (22)" = 2.6, "CHECK (58)" = 6, "DIMO+BOSC (54)" = 5.75, "FLUO (54)" = 5.75, "FLUZ (56)" = 5.75, "PROC (58)" = 6, "TIOF (48)" = 4.86),
+  number.of.studies = TRUE,
+  cex.number.of.studies = 1.25,
+  col.number.of.studies = "black",
+  bg.number.of.studies = "white",
+  multiarm = FALSE,
+  col.multiarm = "gray",
+  pos.number.of.studies = 0.60
+)
+```
+
+
+
+
+
+
+

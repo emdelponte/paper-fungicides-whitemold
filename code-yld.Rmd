@@ -1,0 +1,237 @@
+% Code
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+# Network model
+
+
+*Description*
+
+Study - study number  
+fungicide2 - treatment which is the fungicide name  
+mean_yld - soybean yield (kg/ha) for the treatment  
+mean_v_yld - sampling variance / 4 (four replicates)*
+mean_n = number of replicates (soybean plots)  
+mean_sd_yld = standard deviation for the treatment
+
+In the original data, the sampling variance is the mean square error of the anova. Therefore, there is only one variance for all comparisons within the same trial. 
+
+Let's fit an arm-based model using the `rma.mv` function of metafor to get the estimates for each treatment.
+
+```{r, warning=FALSE}
+wm_yld <- read_csv("data/dat-yld.csv")
+
+library(metafor)
+
+mv_yld <- rma.mv(mean_yld, (mean_yld_sd^2) / 4,
+  mods = ~fungicide2,
+  random = list(~fungicide2 | study),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_yld
+)
+
+summary(mv_yld)
+```
+
+
+We can set linear contrasts between treatments of interest and get the P-valued using the `anova` function.
+
+```{r}
+anova(mv_yld, L = rbind(
+  c(0, 1, -1, 0, 0, 0, 0),
+  c(0, 1, 0, -1, 0, 0, 0),
+  c(0, 1, 0, 0, -1, 0, 0),
+  c(0, 1, 0, 0, 0, -1, 0),
+  c(0, 1, 0, 0, 0, 0, -1),
+  c(0, 0, 1, -1, 0, 0, 0),
+  c(0, 0, 1, 0, -1, 0, 0),
+  c(0, 0, 1, 0, 0, -1, 0),
+  c(0, 0, 1, 0, 0, 0, -1),
+  c(0, 0, 0, 1, -1, 0, 0),
+  c(0, 0, 0, 1, 0, -1, 0),
+  c(0, 0, 0, 1, 0, 0, -1),
+  c(0, 0, 0, 0, 1, -1, 0),
+  c(0, 0, 0, 0, 1, 0, -1),
+  c(0, 0, 0, 0, 0, 1, -1)
+))
+```
+
+
+## Inconsistency 
+
+In a network meta-analysis, it is important to check whether the results are consistent across the different designs. We included this variable manually in the original dataset and tested the interaction effect of treatments and design group.
+
+```{r}
+
+mv_yld_incon <- rma.mv(mean_yld, (mean_yld_sd^2) / 4,
+  mods = ~fungicide2 * design_yld,
+  random = list(~design_yld / fungicide2 | factor(study)),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_yld
+)
+mv_yld_incon
+anova(mv_yld_incon, btt = 9:13)
+
+# anova(mv_inc, mv_inc_incon)
+```
+
+## Moderator analysis
+
+
+### Baseline incidence
+
+Let's create a dummy variable for the incidence level in the check treatment. We will split the data into two set of epidemics greater or lower than 30% incidence as threshold.
+
+```{r}
+library(tidyverse)
+wm_yld <- wm_yld %>%
+  mutate(
+    inc_check_class = case_when(
+      inc_check < 30 ~ "low",
+      inc_check >= 30 ~ "high"
+    )
+  )
+wm_yld
+
+
+mv_yld_class <- rma.mv(mean_yld, (mean_yld_sd^2) / 4,
+  mods = ~fungicide2 * inc_check_class,
+  random = list(~factor(fungicide2) | factor(study)),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_yld
+)
+mv_yld_class
+
+anova(mv_yld_class, btt = 9:14)
+```
+
+### Sclerotia as continuous
+
+It was also tested if sclerotia mass treated as continuous variable (without grouping) significantly affected estimated yield for each fungicide treatment. 
+
+```{r, warning=FALSE}
+library(metafor)
+wm_yld <- wm_yld %>%
+  mutate(scl = as.numeric(scl))
+
+mv_yld_class <- rma.mv(mean_yld, (mean_yld_sd^2) / 4,
+  mods = ~fungicide2 * scl,
+  random = list(~fungicide2 | study),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_yld
+)
+mv_yld_class
+
+anova(mv_yld_class, btt = 9:14)
+```
+
+
+### Incidence as continuous
+
+Another moderator variable tested was white mold incidence as continuous variable (without grouping). 
+
+```{r, warning=FALSE}
+library(metafor)
+
+
+mv_yld_class <- rma.mv(mean_yld, (mean_yld_sd^2) / 4,
+  mods = ~fungicide2 * inc,
+  random = list(~fungicide2 | study),
+  struct = "UN",
+  method = "ML",
+  control = list(optimizer = "nlm"),
+  data = wm_yld
+)
+mv_yld_class
+
+anova(mv_yld_class, btt = 9:14)
+```
+
+## Network Graph
+
+
+First we  will rename the treatments with the number of trials (within parenthesis) that each treatment was present.
+
+```{r, warning=FALSE}
+# Sys.setlocale("LC_ALL", locale = 'pt_BR.UTF-8') # set UT-8 for displaying names correctly
+library(tidyverse)
+
+library(readr)
+wm_yld <- read_csv("data/dat-yld.csv", col_names = TRUE)
+
+
+# Renaming the treatments for the network graph
+library(plyr)
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("AACHECK-0" = "CHECK (73)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC (72)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("FLUO-2" = "FLUO (73)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("FLUZ-2" = "FLUZ (73)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("PROCY-2" = "PROC (72)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("TIOF-4" = "TIOF (62)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("CARB+PROCY-2" = "CARB+PROC (27)"))
+detach("package:plyr", unload = TRUE)
+```
+
+
+
+We need to prepare the data to get the network graph. Thus, we used the package `netmeta` with the function `pairwise` to calculate the contrasts.
+
+
+```{r}
+library(netmeta)
+
+
+
+pair_yld <- pairwise(
+  treat = factor(fungicide2),
+  n = 4,
+  mean = as.numeric(mean_yld),
+  sd = as.numeric(mean_yld_sd),
+  studlab = study,
+  data = wm_yld,
+  sm = "MD"
+)
+```
+
+
+
+```{r}
+
+net_yld <- netmeta(TE, seTE, treat1, treat2, studlab, data = pair_yld, sm = "MD")
+summary(net_yld)
+```
+
+
+
+A network graph is composed of nodes (fungicide treatments) and edges or links between two treatments directly compared in a same trial. This graph allows to visualize how the treatments relate to each other and the number of direct comparisons can be depicted by the thickness of the edges, but also with numbers presented at the top of the links. 
+
+```{r}
+
+netgraph(net_yld,
+  plastic = FALSE,
+  col = "gray",
+  thickness = "number.of.studies",
+  points = TRUE,
+  col.points = "black",
+  cex.points = c("CARB+PROC (27)" = 2.2, "CHECK (73)" = 6, "DIMO+BOSC (72)" = 5.9, "FLUO (73)" = 6, "FLUZ (73)" = 6, "PROC (72)" = 5.9, "TIOF (62)" = 5.07),
+  number.of.studies = TRUE,
+  cex.number.of.studies = 1.25,
+  col.number.of.studies = "black",
+  bg.number.of.studies = "white",
+  multiarm = FALSE,
+  col.multiarm = "gray",
+  pos.number.of.studies = 0.60
+)
+```
+
+
