@@ -1,9 +1,5 @@
 % Code
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
-```
 
 
 # Network model
@@ -14,6 +10,18 @@ Let's fit an arm-based model using the `rma.mv` function of metafor to get the e
 ```{r}
 library(tidyverse)
 wm_scl <- read.csv("data/dat-scl.csv", h = T, sep = ",")
+
+# Rename the treatments
+library(plyr)
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("AACHECK-0" = "AACHECK"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("FLUO-2" = "FLUO"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("FLUZ-2" = "FLUZ"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("PROCY-2" = "PROC"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("TIOF-4" = "TMET"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("CARB+PROCY-2" = "CARB+PROC"))
+detach("package:plyr", unload = TRUE)
+
 
 
 # create the log of the inc variable
@@ -135,7 +143,7 @@ wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC (54
 wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("FLUO-2" = "FLUO (54)"))
 wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("FLUZ-2" = "FLUZ (56)"))
 wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("PROCY-2" = "PROC (58)"))
-wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("TIOF-4" = "TIOF (48)"))
+wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("TIOF-4" = "TMET (48)"))
 wm_scl$fungicide2 <- revalue(wm_scl$fungicide2, c("CARB+PROCY-2" = "CARB+PROC (22)"))
 detach("package:plyr", unload = TRUE)
 ```
@@ -177,7 +185,7 @@ netgraph(net_scl,
   thickness = "number.of.studies",
   points = TRUE,
   col.points = "black",
-  cex.points = c("CARB+PROC (22)" = 2.6, "CHECK (58)" = 6, "DIMO+BOSC (54)" = 5.75, "FLUO (54)" = 5.75, "FLUZ (56)" = 5.75, "PROC (58)" = 6, "TIOF (48)" = 4.86),
+  cex.points = c("CARB+PROC (22)" = 2.6, "CHECK (58)" = 6, "DIMO+BOSC (54)" = 5.75, "FLUO (54)" = 5.75, "FLUZ (56)" = 5.75, "PROC (58)" = 6, "TMET (48)" = 4.86),
   number.of.studies = TRUE,
   cex.number.of.studies = 1.25,
   col.number.of.studies = "black",

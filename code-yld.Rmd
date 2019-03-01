@@ -1,9 +1,5 @@
 % Code
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE)
-```
-
 # Network model
 
 
@@ -22,6 +18,20 @@ Let's fit an arm-based model using the `rma.mv` function of metafor to get the e
 
 ```{r, warning=FALSE}
 wm_yld <- read_csv("data/dat-yld.csv")
+
+
+# Renaming the treatments
+library(plyr)
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("AACHECK-0" = "AACHECK"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("FLUO-2" = "FLUO"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("FLUZ-2" = "FLUZ"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("PROCY-2" = "PROC"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("TIOF-4" = "TMET"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("CARB+PROCY-2" = "CARB+PROC"))
+detach("package:plyr", unload = TRUE)
+
+
 
 library(metafor)
 
@@ -177,7 +187,7 @@ wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC (72
 wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("FLUO-2" = "FLUO (73)"))
 wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("FLUZ-2" = "FLUZ (73)"))
 wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("PROCY-2" = "PROC (72)"))
-wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("TIOF-4" = "TIOF (62)"))
+wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("TIOF-4" = "TMET (62)"))
 wm_yld$fungicide2 <- revalue(wm_yld$fungicide2, c("CARB+PROCY-2" = "CARB+PROC (27)"))
 detach("package:plyr", unload = TRUE)
 ```
@@ -223,7 +233,7 @@ netgraph(net_yld,
   thickness = "number.of.studies",
   points = TRUE,
   col.points = "black",
-  cex.points = c("CARB+PROC (27)" = 2.2, "CHECK (73)" = 6, "DIMO+BOSC (72)" = 5.9, "FLUO (73)" = 6, "FLUZ (73)" = 6, "PROC (72)" = 5.9, "TIOF (62)" = 5.07),
+  cex.points = c("CARB+PROC (27)" = 2.2, "CHECK (73)" = 6, "DIMO+BOSC (72)" = 5.9, "FLUO (73)" = 6, "FLUZ (73)" = 6, "PROC (72)" = 5.9, "TMET (62)" = 5.07),
   number.of.studies = TRUE,
   cex.number.of.studies = 1.25,
   col.number.of.studies = "black",
@@ -232,6 +242,7 @@ netgraph(net_yld,
   col.multiarm = "gray",
   pos.number.of.studies = 0.60
 )
+
 ```
 
 

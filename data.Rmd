@@ -4,13 +4,13 @@ The data used in this analysis were obtained from the network of cooperative tri
 
 The primary data has been published as annual reports that summarized either a mean value for the treatments across all experiments for the year or, in some years, the mean values at the trial level. 
 
-There are three respnse variables of our interest in the studies:
+There are three response variables of our interest in the studies:
 
 - **White mold incidence** (%, **inc**): proportion of plants affected
 - **Post-harvest sclerotia mass** (g/ha, **scl**): sclerotia weight
 - **Crop yield** (kg/ha, **yld**): grain weight at 13% humidity
 
-The original spreadsheets from each trial were obtained from collaborators and the data used for the analysis were organized in a single spreadsheet where each row represents a treatment within a trial (study). Each trial was conducted in a randomized complete block design with four replicates. A preliminary analysis were conducted (not shown) to obtain the treatment means for each variable. The sampling variance for the study (trial) was obtained by fitting an Anova model for the raw data and using the mean square error (MSE) to calculate the sampling variance. Additionally, for each treament, the standard deviation (four blocks) was calculated for each variable during the data preparation step. 
+The original spreadsheets from each trial were obtained from collaborators and the data used for the analysis were organized in a single spreadsheet where each row represents a treatment within a trial (study). Each trial was conducted in a randomized complete block design with four replicates. A preliminary analysis were conducted (not shown) to obtain the treatment means for each variable. The sampling variance for the study (trial) was obtained by fitting an Anova model for the raw data and using the mean square error (MSE) to calculate the sampling variance. Additionally, for each treatment, the standard deviation (four blocks) was calculated for each variable during the data preparation step. 
 
 ## Data import 
 

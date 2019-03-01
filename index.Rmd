@@ -1,6 +1,6 @@
 % About
 
-This website documents by describing in detail the data and all steps of the statistical analysis conducted for a research as a result of the study conducted by Jhonatan Paulo Barro, an M.Sc. student of the Graduate Program in Plant Pathology, under the guidance of Prof. Emerson Del Ponte, Universidade Federal de Viçosa.
+<img src = "Figures/netgraph.png" width = 250px align = right> This website documents by describing in detail the data and all steps of the statistical analysis conducted for a research as a result of the study conducted by Jhonatan Paulo Barro, an M.Sc. student of the Graduate Program in Plant Pathology, under the guidance of Prof. Emerson Del Ponte, Universidade Federal de Viçosa.
 
 
 The objective of this study was to use meta-analysis for summarizing percent control of white mold incidence and sclerotia mass by selected fungicides, as well as the yield response to the fungicides due to disease reduction. 

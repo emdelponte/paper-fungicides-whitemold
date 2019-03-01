@@ -4,56 +4,56 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+TC');
 
 body {
-font-family: 'Noto Serif TC', serif;
-margin-left:2px;
-margin-right:2px;
-margin-top: 20px;
-font-size: 19px;
-line-height: 1.7
+margin:20px;
+padding:0px;
+width:100%;
+font-size: 1.8em;
+line-height: 170%
 }
 
-a { color: #00994d;}
+img {
+ margin-top: 40px;
+ margin-bottom: 40px
+}
 
-p {
-line-height:1.5;
-margin-top:10px;
-margin-bottom:30px;
-margin-left:0px;
-margin-right:0px;
-  }
 
-pre.r { border: 0; 
+
+h1,h2,h3,h4 {
 margin-bottom: 20px;
-  margin-top: 20px;
+margin-top: 30px;
+padding-top: 15px;
+display: inline-block;
+width:100%
+}
+}
+h1.title {
+font-family: 'Oswald', sans-serif;
+font-size: 28px;
+line-height: 100%
+}
+
+pre code, pre, code {
+ margin-top: 30px;
+ margin-bottom: 40px
+ 
 }
 
 
-pre {
-  font-size:16px;
-  padding: 20px;
-  margin-bottom:20px;
-  background-color:#f9f9f9;
-  
+blockquote {
+text-align: justify;
+margin-top: 20px;
+margin-bottom: 30px;
+font-size: 1.2em;
+line-height:130%;
+background-color: #f9f9f9;
 }
 
- 
-h1, h2, h3,h4 { 
-  font-family: 'Roboto Condensed', sans-serif;
-  padding-bottom: 20px;
-  padding-top: 30px;
-  color: #00000;
- 
-} 
- 
-.navbar-default {
-    background-color: #00994d;
-    font-family: 'Roboto Condensed', serif;
 
-}
+
 .list-group-item.active {
     z-index: 3;
     color: #ffffff;
-    background-color: #00994d;
+    background-color: 'steelblue';
     border-color: #006699
 }
 

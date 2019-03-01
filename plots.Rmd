@@ -1,11 +1,5 @@
 
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
-```
-
 # Plots
 
 The plots below were presented in the article.
@@ -74,7 +68,7 @@ mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("DIMO+BOSC_2" = "DIMO+BOSC"))
 mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("FLUO_2" = "FLUO"))
 mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("FLUZ_2" = "FLUZ"))
 mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("PROCY_2" = "PROC"))
-mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("TIOF_4" = "TIOF"))
+mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("TIOF_4" = "TMET"))
 mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("CARB+PROCY_2" = "CARB+PROC"))
 detach("package:plyr", unload=TRUE)
 
@@ -152,7 +146,7 @@ ggsave("Figures/Fig1_supp.png", width = 8, height=11, dpi = 300)
 ## Incidence (inc)
 
 ```{r, message=FALSE, warning=FALSE}
-mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ",  "PROC", "TIOF"))
+mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ",  "PROC", "TMET"))
 
 box_inc <- ggplot(mofo1, aes(fungicide2, inc))+
   geom_boxplot(size = 0.5,outlier.shape = NA) +
@@ -167,7 +161,7 @@ box_inc <- ggplot(mofo1, aes(fungicide2, inc))+
 ## Sclerotia mass (scl)
 
 ```{r, message=FALSE, warning=FALSE}
-mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ",  "PROC", "TIOF"))
+mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ",  "PROC", "TMET"))
 box_scl <-   ggplot(mofo1, aes(fungicide2,scl))+
   geom_boxplot(size = 0.5,outlier.shape = NA)+
   geom_jitter(width=0.1, shape=1, size=2, color="gray50")+
@@ -186,7 +180,7 @@ ggsave("Figures/Fig4.png", width = 9, height=4, dpi = 300)
 ##  Yield (yld)
 
 ```{r, message=FALSE, warning=FALSE}
-mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC","DIMO+BOSC", "FLUO", "FLUZ",  "PROC", "TIOF"))
+mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC","DIMO+BOSC", "FLUO", "FLUZ",  "PROC", "TMET"))
 box_yld <-  ggplot(mofo1, aes(fungicide2, yld)) +
   geom_boxplot(size = 0.5,outlier.shape = NA)+
   geom_jitter(width=0.1, shape=1, size=2.5, color="gray50")+
@@ -263,6 +257,10 @@ scl_inc <- scl_inc %>%
          scl_inf = as.numeric(scl_inf),
          scl_sup = as.numeric(scl_sup))
 
+library(plyr)
+scl_inc$Fungicide <- revalue(scl_inc$Fungicide, c("TIOF" = "TMET"))
+detach("package:plyr", unload=TRUE)
+
 set.seed(42)
 ggplot(scl_inc,aes(inc, scl)) +
   geom_smooth(colour="black", method = "lm")+
@@ -298,6 +296,10 @@ inc_yld <- inc_yld %>%
          yld_inf = as.numeric(yld_inf),
          yld_sup = as.numeric(yld_sup))
 
+library(plyr)
+inc_yld$Fungicide <- revalue(inc_yld$Fungicide, c("TIOF" = "TMET"))
+detach("package:plyr", unload=TRUE)
+
 set.seed(42)
 gr1 <- ggplot(inc_yld,aes(inc, yld)) +
   geom_smooth(colour="black", method = "lm")+
@@ -332,6 +334,10 @@ scl_yld <- scl_yld %>%
          yld_sup = as.numeric(yld_sup),
          scl_inf = as.numeric(scl_inf),
          scl_sup = as.numeric(scl_sup))
+
+library(plyr)
+scl_yld$Fungicide <- revalue(scl_yld$Fungicide, c("TIOF" = "TMET"))
+detach("package:plyr", unload=TRUE)
 
 set.seed(42)
 gr2 <- ggplot(scl_yld,aes(scl, yld)) +
@@ -415,6 +421,9 @@ mofo <- gsheet2tbl(
 mofo <- mofo %>% 
   mutate(tau = as.numeric(tau),
          D = as.numeric(D))
+library(plyr)
+mofo$fungicide <- revalue(mofo$fungicide, c("TIOF" = "TMET"))
+detach("package:plyr", unload=TRUE)
 
 prob = function(C,P,tau,D){
   profit = (D - (C/(P/1000)))/sqrt(tau)  # loss

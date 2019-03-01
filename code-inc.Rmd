@@ -1,11 +1,9 @@
 % Code
 
-
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 ```
+
 
 
 # Network model
@@ -17,6 +15,17 @@ Let's fit an arm-based model using the `rma.mv` function of metafor to get the e
 library(tidyverse)
 wm_inc <- read_csv("data/dat-inc.csv")
 
+
+# Renaming the treatments for the network graph
+library(plyr)
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("AACHECK-0" = "AACHECK"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("FLUO-2" = "FLUO"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("FLUZ-2" = "FLUZ"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("PROCY-2" = "PROC"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("TIOF-4" = "TMET"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("CARB+PROCY-2" = "CARB+PROC"))
+detach("package:plyr", unload = TRUE)
 
 # create the log of the inc variable
 wm_inc <- wm_inc %>%
@@ -148,7 +157,7 @@ wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("DIMO+BOSC-2" = "DIMO+BOSC (72
 wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("FLUO-2" = "FLUO (73)"))
 wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("FLUZ-2" = "FLUZ (74)"))
 wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("PROCY-2" = "PROC (74)"))
-wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("TIOF-4" = "TIOF (62)"))
+wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("TIOF-4" = "TMET (62)"))
 wm_inc$fungicide2 <- revalue(wm_inc$fungicide2, c("CARB+PROCY-2" = "CARB+PROC (27)"))
 detach("package:plyr", unload = TRUE)
 ```
@@ -187,7 +196,7 @@ netgraph(net_inc,
   thickness = "number.of.studies",
   points = TRUE,
   col.points = "black",
-  cex.points = c("CARB+PROC (27)" = 2.5, "CHECK (74)" = 6, "DIMO+BOSC (72)" = 5.75, "FLUO (73)" = 5.83, "FLUZ (74)" = 6, "PROC (74)" = 6, "TIOF (62)" = 5),
+  cex.points = c("CARB+PROC (27)" = 2.5, "CHECK (74)" = 6, "DIMO+BOSC (72)" = 5.75, "FLUO (73)" = 5.83, "FLUZ (74)" = 6, "PROC (74)" = 6, "TMET (62)" = 5),
   number.of.studies = TRUE,
   cex.number.of.studies = 1.25,
   col.number.of.studies = "black",
