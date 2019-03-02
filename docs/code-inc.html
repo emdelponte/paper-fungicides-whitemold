@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Code</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">NMA fungicide effects on white mold</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa fa fa-home"></span>
+     
+    About
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa fa fa-table"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa fa fa-file-code-o"></span>
+     
+    Documented analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="code-inc.html">Disease Incidence</a>
+    </li>
+    <li>
+      <a href="code-scl.html">Sclerotia mass</a>
+    </li>
+    <li>
+      <a href="code-yld.html">Soybean yield</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="plots.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Publication-ready plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emdelponte/paper-fungicides-whitemold">
+    <span class="fa fa-github-square"></span>
+     
+    source
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Code</h1>
+
+</div>
+
+
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, warning = FALSE)</code></pre>
+<div id="network-model" class="section level1">
+<h1>Network model</h1>
+<p>Let’s fit an arm-based model using the <code>rma.mv</code> function of metafor to get the estimates for each treatment.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages ---------------- tidyverse 1.2.1 --</code></pre>
+<pre><code>## v ggplot2 3.1.0     v purrr   0.2.5
+## v tibble  1.4.2     v dplyr   0.7.6
+## v tidyr   0.8.1     v stringr 1.4.0
+## v readr   1.2.1     v forcats 0.3.0</code></pre>
+<pre><code>## -- Conflicts ------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>wm_inc &lt;- read_csv(&quot;data/dat-inc.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   study = col_double(),
+##   year = col_character(),
+##   location = col_character(),
+##   state = col_character(),
+##   elevation = col_double(),
+##   region = col_character(),
+##   inc_check = col_double(),
+##   fungicide2 = col_character(),
+##   design_inc = col_double(),
+##   mean_inc = col_double(),
+##   mean_inc_qmr = col_double(),
+##   mean_inc_sd = col_double()
+## )</code></pre>
+<pre class="r"><code># Renaming the treatments for the network graph
+library(plyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## You have loaded plyr after dplyr - this is likely to cause problems.
+## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+## library(plyr); library(dplyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     compact</code></pre>
+<pre class="r"><code>wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;AACHECK-0&quot; = &quot;AACHECK&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;DIMO+BOSC-2&quot; = &quot;DIMO+BOSC&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;FLUO-2&quot; = &quot;FLUO&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;FLUZ-2&quot; = &quot;FLUZ&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;PROCY-2&quot; = &quot;PROC&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;TIOF-4&quot; = &quot;TMET&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;CARB+PROCY-2&quot; = &quot;CARB+PROC&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+# create the log of the inc variable
+wm_inc &lt;- wm_inc %&gt;%
+  mutate(log_inc = log(mean_inc))
+
+# create the sampling variance for the log of inc
+wm_inc$vi &lt;- with(wm_inc, (mean_inc_sd^2) / (4 * mean_inc^2))</code></pre>
+<div id="covariance-structure" class="section level2">
+<h2>covariance structure</h2>
+<p>Now we will fit models with CS, HCS and UN matrix-covariance structure. We will then compare them with <code>anova</code> function to choose among the best model.</p>
+<pre class="r"><code>library(metafor)</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     expand</code></pre>
+<pre><code>## Loading &#39;metafor&#39; package (version 2.0-0). For an overview 
+## and introduction to the package please type: help(metafor).</code></pre>
+<pre class="r"><code>mv_inc_HCS &lt;- rma.mv(log_inc, vi,
+  mods = ~fungicide2,
+  random = list(~fungicide2 | factor(study)),
+  struct = &quot;HCS&quot;,
+  method = &quot;ML&quot;,
+  data = wm_inc
+)
+
+mv_inc &lt;- rma.mv(log_inc, vi,
+  mods = ~fungicide2,
+  random = list(~fungicide2 | factor(study)),
+  struct = &quot;UN&quot;,
+  method = &quot;ML&quot;,
+  control = list(optimizer = &quot;nlm&quot;),
+  data = wm_inc
+)
+
+mv_inc</code></pre>
+<pre><code>## 
+## Multivariate Meta-Analysis Model (k = 456; method: ML)
+## 
+## Variance Components: 
+## 
+## outer factor: factor(study) (nlvls = 74)
+## inner factor: fungicide2    (nlvls = 7)
+## 
+##             estim    sqrt  k.lvl  fixed      level
+## tau^2.1    0.4956  0.7040     74     no    AACHECK
+## tau^2.2    1.8452  1.3584     27     no  CARB+PROC
+## tau^2.3    1.4674  1.2114     72     no  DIMO+BOSC
+## tau^2.4    1.5802  1.2571     73     no       FLUO
+## tau^2.5    1.2500  1.1180     74     no       FLUZ
+## tau^2.6    1.2222  1.1055     74     no       PROC
+## tau^2.7    0.8512  0.9226     62     no       TMET
+## 
+##            rho.AACH  rho.CARB  rho.DIMO  rho.FLUO  rho.FLUZ  rho.PROC
+## AACHECK           1    0.8208    0.8745    0.8619    0.8889    0.8926
+## CARB+PROC    0.8208         1    0.8967    0.9044    0.8668    0.9377
+## DIMO+BOSC    0.8745    0.8967         1    0.9790    0.9452    0.9470
+## FLUO         0.8619    0.9044    0.9790         1    0.9204    0.9224
+## FLUZ         0.8889    0.8668    0.9452    0.9204         1    0.9828
+## PROC         0.8926    0.9377    0.9470    0.9224    0.9828         1
+## TMET         0.9366    0.8889    0.8995    0.8620    0.9029    0.9370
+##            rho.TMET    AACH  CARB  DIMO  FLUO  FLUZ  PROC  TMET
+## AACHECK      0.9366       -    no    no    no    no    no    no
+## CARB+PROC    0.8889      27     -    no    no    no    no    no
+## DIMO+BOSC    0.8995      72    27     -    no    no    no    no
+## FLUO         0.8620      73    27    72     -    no    no    no
+## FLUZ         0.9029      74    27    72    73     -    no    no
+## PROC         0.9370      74    27    72    73    74     -    no
+## TMET              1      62    27    60    61    62    62     -
+## 
+## Test for Residual Heterogeneity: 
+## QE(df = 449) = 37960.0871, p-val &lt; .0001
+## 
+## Test of Moderators (coefficient(s) 2:7): 
+## QM(df = 6) = 497.2427, p-val &lt; .0001
+## 
+## Model Results:
+## 
+##                      estimate      se      zval    pval    ci.lb    ci.ub
+## intrcpt                3.3881  0.0833   40.6812  &lt;.0001   3.2249   3.5513
+## fungicide2CARB+PROC   -1.8281  0.1315  -13.9024  &lt;.0001  -2.0859  -1.5704
+## fungicide2DIMO+BOSC   -1.7237  0.0876  -19.6780  &lt;.0001  -1.8954  -1.5520
+## fungicide2FLUO        -1.7034  0.0941  -18.0963  &lt;.0001  -1.8879  -1.5189
+## fungicide2FLUZ        -1.5138  0.0756  -20.0367  &lt;.0001  -1.6619  -1.3658
+## fungicide2PROC        -1.3642  0.0728  -18.7373  &lt;.0001  -1.5069  -1.2215
+## fungicide2TMET        -0.7838  0.0519  -15.1082  &lt;.0001  -0.8854  -0.6821
+##                         
+## intrcpt              ***
+## fungicide2CARB+PROC  ***
+## fungicide2DIMO+BOSC  ***
+## fungicide2FLUO       ***
+## fungicide2FLUZ       ***
+## fungicide2PROC       ***
+## fungicide2TMET       ***
+## 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>We can see below that the UN structure is a better model.</p>
+<pre class="r"><code>anova(mv_inc_HCS, mv_inc)</code></pre>
+<pre><code>##         df      AIC      BIC     AICc    logLik     LRT   pval         QE
+## Full    35 783.4193 927.7065 789.4193 -356.7096                37960.0871
+## Reduced 15 811.7768 873.6141 812.8677 -390.8884 68.3575 &lt;.0001 37960.0871</code></pre>
+<pre class="r"><code>AIC(mv_inc_HCS)</code></pre>
+<pre><code>## [1] 811.7768</code></pre>
+</div>
+<div id="percent-control" class="section level2">
+<h2>Percent control</h2>
+<p>Let’s obtain the percent control from the estimated ratios.</p>
+<pre class="r"><code>efficacy_inc &lt;- data.frame(cbind(
+  (1 - exp(mv_inc$b)) * 100,
+  (1 - exp(mv_inc$ci.lb)) * 100,
+  (1 - exp(mv_inc$ci.ub)) * 100
+))
+
+
+
+efficacy_inc</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["X2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["X3"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"-2860.94159","2":"-2415.00183","3":"-3385.95177","_rn_":"intrcpt"},{"1":"83.92888","2":"87.58021","3":"79.20409","_rn_":"fungicide2CARB+PROC"},{"1":"82.15899","2":"84.97344","3":"78.81738","_rn_":"fungicide2DIMO+BOSC"},{"1":"81.79313","2":"84.86044","3":"78.10437","_rn_":"fungicide2FLUO"},{"1":"77.99382","2":"81.02275","3":"74.48146","_rn_":"fungicide2FLUZ"},{"1":"74.44200","2":"77.84086","3":"70.52180","_rn_":"fungicide2PROC"},{"1":"54.33106","2":"58.74618","3":"49.44341","_rn_":"fungicide2TMET"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="contrasts" class="section level2">
+<h2>Contrasts</h2>
+<p>We can set linear contrasts between treatments of interest and get the P-value using the <code>anova</code> function.</p>
+<pre class="r"><code>anova(mv_inc, L = rbind(
+  c(0, 1, -1, 0, 0, 0, 0),
+  c(0, 1, 0, -1, 0, 0, 0),
+  c(0, 1, 0, 0, -1, 0, 0),
+  c(0, 1, 0, 0, 0, -1, 0),
+  c(0, 1, 0, 0, 0, 0, -1),
+  c(0, 0, 1, -1, 0, 0, 0),
+  c(0, 0, 1, 0, -1, 0, 0),
+  c(0, 0, 1, 0, 0, -1, 0),
+  c(0, 0, 1, 0, 0, 0, -1),
+  c(0, 0, 0, 1, -1, 0, 0),
+  c(0, 0, 0, 1, 0, -1, 0),
+  c(0, 0, 0, 1, 0, 0, -1),
+  c(0, 0, 0, 0, 1, -1, 0),
+  c(0, 0, 0, 0, 1, 0, -1),
+  c(0, 0, 0, 0, 0, 1, -1)
+))</code></pre>
+<pre><code>## 
+## Hypotheses:                                                 
+## 1:  fungicide2CARB+PROC - fungicide2DIMO+BOSC = 0
+## 2:       fungicide2CARB+PROC - fungicide2FLUO = 0
+## 3:       fungicide2CARB+PROC - fungicide2FLUZ = 0
+## 4:       fungicide2CARB+PROC - fungicide2PROC = 0
+## 5:       fungicide2CARB+PROC - fungicide2TMET = 0
+## 6:       fungicide2DIMO+BOSC - fungicide2FLUO = 0
+## 7:       fungicide2DIMO+BOSC - fungicide2FLUZ = 0
+## 8:       fungicide2DIMO+BOSC - fungicide2PROC = 0
+## 9:       fungicide2DIMO+BOSC - fungicide2TMET = 0
+## 10:           fungicide2FLUO - fungicide2FLUZ = 0
+## 11:           fungicide2FLUO - fungicide2PROC = 0
+## 12:           fungicide2FLUO - fungicide2TMET = 0
+## 13:           fungicide2FLUZ - fungicide2PROC = 0
+## 14:           fungicide2FLUZ - fungicide2TMET = 0
+## 15:           fungicide2PROC - fungicide2TMET = 0
+## 
+## Results:
+##     estimate     se     zval   pval
+## 1:   -0.1045 0.1122  -0.9313 0.3517
+## 2:   -0.1248 0.1079  -1.1559 0.2477
+## 3:   -0.3143 0.1193  -2.6353 0.0084
+## 4:   -0.4639 0.0989  -4.6923 &lt;.0001
+## 5:   -1.0444 0.1160  -9.0024 &lt;.0001
+## 6:   -0.0203 0.0488  -0.4157 0.6776
+## 7:   -0.2098 0.0615  -3.4113 0.0006
+## 8:   -0.3595 0.0601  -5.9839 &lt;.0001
+## 9:   -0.9399 0.0768 -12.2375 &lt;.0001
+## 10:  -0.1895 0.0720  -2.6318 0.0085
+## 11:  -0.3392 0.0708  -4.7898 &lt;.0001
+## 12:  -0.9196 0.0888 -10.3590 &lt;.0001
+## 13:  -0.1496 0.0389  -3.8484 0.0001
+## 14:  -0.7301 0.0695 -10.5031 &lt;.0001
+## 15:  -0.5805 0.0587  -9.8896 &lt;.0001</code></pre>
+</div>
+<div id="inconsistency" class="section level2">
+<h2>Inconsistency</h2>
+<p>In a network meta-analysis, it is important to check whether the results are consistent across the different designs. We included this variable manually in the original dataset and tested the interaction effect of treatments and design group.</p>
+<pre class="r"><code>mv_inc_incon &lt;- rma.mv(log_inc, vi,
+  mods = ~fungicide2 * design_inc,
+  random = list(~factor(study) | design_inc / fungicide2),
+  struct = &quot;UN&quot;,
+  method = &quot;ML&quot;,
+  control = list(optimizer = &quot;nlm&quot;),
+  data = wm_inc
+)
+
+anova(mv_inc_incon, btt = 9:13)</code></pre>
+<pre><code>## 
+## Test of Moderators (coefficient(s) 9:13): 
+## QM(df = 5) = 2.9935, p-val = 0.7010</code></pre>
+<pre class="r"><code>anova(mv_inc, mv_inc_incon)</code></pre>
+<pre><code>##         df      AIC      BIC     AICc    logLik      LRT   pval         QE
+## Full    35 783.4193 927.7065 789.4193 -356.7096                 37960.0871
+## Reduced 16 899.3586 965.3185 900.5978 -433.6793 153.9393 &lt;.0001 28935.0016</code></pre>
+</div>
+<div id="network-graph" class="section level2">
+<h2>Network Graph</h2>
+<p>First we will rename the treatments with the number of trials (within parenthesis) that each treatment was present.</p>
+<pre class="r"><code>Sys.setlocale(&quot;LC_ALL&quot;, &quot;pt_BR.UTF-8&quot;) # set UT-8 for displaying names correctly</code></pre>
+<pre><code>## [1] &quot;pt_BR.UTF-8/pt_BR.UTF-8/pt_BR.UTF-8/C/pt_BR.UTF-8/C&quot;</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(readr)
+wm_inc &lt;- read_csv(&quot;data/dat-inc.csv&quot;)
+
+# Renaming the treatments for the network graph
+library(plyr)
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;AACHECK-0&quot; = &quot;CHECK (74)&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;DIMO+BOSC-2&quot; = &quot;DIMO+BOSC (72)&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;FLUO-2&quot; = &quot;FLUO (73)&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;FLUZ-2&quot; = &quot;FLUZ (74)&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;PROCY-2&quot; = &quot;PROC (74)&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;TIOF-4&quot; = &quot;TMET (62)&quot;))
+wm_inc$fungicide2 &lt;- revalue(wm_inc$fungicide2, c(&quot;CARB+PROCY-2&quot; = &quot;CARB+PROC (27)&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)</code></pre>
+<p>Now We need to prepare the data to get the network graph. Thus, we used the package <code>netmeta</code> with the function <code>pairwise</code> to calculate the contrasts.</p>
+<pre class="r"><code>library(netmeta)
+pair_inc &lt;- pairwise(
+  treat = factor(fungicide2),
+  n = 4,
+  mean = mean_inc,
+  sd = mean_inc_sd,
+  studlab = study,
+  data = wm_inc,
+  sm = &quot;ROM&quot;
+)</code></pre>
+<pre class="r"><code>net_inc &lt;- netmeta(TE, seTE, treat1, treat2, studlab, data = pair_inc, sm = &quot;ROM&quot;, backtransf = TRUE)
+summary(net_inc)</code></pre>
+<pre><code>## Number of studies: k = 74
+## Number of treatments: n = 7
+## Number of pairwise comparisons: m = 1198
+## Number of designs: d = 5
+## 
+## Fixed effect model
+## 
+## Treatment estimate (sm = &#39;ROM&#39;):
+##                CARB+PROC (27) CHECK (74) DIMO+BOSC (72) FLUO (73)
+## CARB+PROC (27)              .     0.3922         1.1497    1.0029
+## CHECK (74)             2.5498          .         2.9314    2.5572
+## DIMO+BOSC (72)         0.8698     0.3411              .    0.8723
+## FLUO (73)              0.9971     0.3911         1.1463         .
+## FLUZ (74)              0.8570     0.3361         0.9852    0.8594
+## PROC (74)              1.0202     0.4001         1.1729    1.0231
+## TMET (62)              1.2543     0.4919         1.4420    1.2579
+##                FLUZ (74) PROC (74) TMET (62)
+## CARB+PROC (27)    1.1669    0.9802    0.7973
+## CHECK (74)        2.9754    2.4993    2.0329
+## DIMO+BOSC (72)    1.0150    0.8526    0.6935
+## FLUO (73)         1.1635    0.9774    0.7950
+## FLUZ (74)              .    0.8400    0.6832
+## PROC (74)         1.1905         .    0.8134
+## TMET (62)         1.4636    1.2294         .
+## 
+## Lower 95%-confidence limit:
+##                CARB+PROC (27) CHECK (74) DIMO+BOSC (72) FLUO (73)
+## CARB+PROC (27)              .     0.3789         1.1022    0.9622
+## CHECK (74)             2.4636          .         2.8406    2.4807
+## DIMO+BOSC (72)         0.8339     0.3306              .    0.8401
+## FLUO (73)              0.9566     0.3794         1.1040         .
+## FLUZ (74)              0.8186     0.3246         0.9439    0.8239
+## PROC (74)              0.9786     0.3881         1.1281    0.9863
+## TMET (62)              1.2113     0.4817         1.3959    1.2193
+##                FLUZ (74) PROC (74) TMET (62)
+## CARB+PROC (27)    1.1146    0.9403    0.7700
+## CHECK (74)        2.8734    2.4245    1.9906
+## DIMO+BOSC (72)    0.9724    0.8201    0.6713
+## FLUO (73)         1.1154    0.9422    0.7706
+## FLUZ (74)              .    0.8053    0.6588
+## PROC (74)         1.1413         .    0.7883
+## TMET (62)         1.4113    1.1915         .
+## 
+## Upper 95%-confidence limit:
+##                CARB+PROC (27) CHECK (74) DIMO+BOSC (72) FLUO (73)
+## CARB+PROC (27)              .     0.4059         1.1991    1.0454
+## CHECK (74)             2.6390          .         3.0251    2.6360
+## DIMO+BOSC (72)         0.9073     0.3520              .    0.9058
+## FLUO (73)              1.0393     0.4031         1.1903         .
+## FLUZ (74)              0.8972     0.3480         1.0284    0.8965
+## PROC (74)              1.0635     0.4125         1.2194    1.0614
+## TMET (62)              1.2988     0.5024         1.4896    1.2977
+##                FLUZ (74) PROC (74) TMET (62)
+## CARB+PROC (27)    1.2216    1.0219    0.8256
+## CHECK (74)        3.0810    2.5765    2.0761
+## DIMO+BOSC (72)    1.0595    0.8864    0.7164
+## FLUO (73)         1.2137    1.0139    0.8201
+## FLUZ (74)              .    0.8762    0.7086
+## PROC (74)         1.2418         .    0.8393
+## TMET (62)         1.5179    1.2686         .
+## 
+## Random effects model
+## 
+## Treatment estimate (sm = &#39;ROM&#39;):
+##                CARB+PROC (27) CHECK (74) DIMO+BOSC (72) FLUO (73)
+## CARB+PROC (27)              .     0.1878         0.9557    0.8773
+## CHECK (74)             5.3246          .         5.0887    4.6715
+## DIMO+BOSC (72)         1.0464     0.1965              .    0.9180
+## FLUO (73)              1.1398     0.2141         1.0893         .
+## FLUZ (74)              1.2670     0.2380         1.2109    1.1116
+## PROC (74)              1.4465     0.2717         1.3824    1.2691
+## TMET (62)              2.5639     0.4815         2.4503    2.2494
+##                FLUZ (74) PROC (74) TMET (62)
+## CARB+PROC (27)    0.7893    0.6913    0.3900
+## CHECK (74)        4.2025    3.6811    2.0768
+## DIMO+BOSC (72)    0.8258    0.7234    0.4081
+## FLUO (73)         0.8996    0.7880    0.4446
+## FLUZ (74)              .    0.8759    0.4942
+## PROC (74)         1.1416         .    0.5642
+## TMET (62)         2.0235    1.7725         .
+## 
+## Lower 95%-confidence limit:
+##                CARB+PROC (27) CHECK (74) DIMO+BOSC (72) FLUO (73)
+## CARB+PROC (27)              .     0.1548         0.7817    0.7180
+## CHECK (74)             4.3901          .         4.4727    4.1122
+## DIMO+BOSC (72)         0.8558     0.1727              .    0.7978
+## FLUO (73)              0.9328     0.1884         0.9467         .
+## FLUZ (74)              1.0386     0.2102         1.0551    0.9697
+## PROC (74)              1.1852     0.2400         1.2046    1.1074
+## TMET (62)              2.1022     0.4248         2.1310    1.9588
+##                FLUZ (74) PROC (74) TMET (62)
+## CARB+PROC (27)    0.6470    0.5665    0.3198
+## CHECK (74)        3.7116    3.2524    1.8321
+## DIMO+BOSC (72)    0.7196    0.6304    0.3549
+## FLUO (73)         0.7848    0.6876    0.3871
+## FLUZ (74)              .    0.7665    0.4318
+## PROC (74)         0.9990         .    0.4929
+## TMET (62)         1.7680    1.5484         .
+## 
+## Upper 95%-confidence limit:
+##                CARB+PROC (27) CHECK (74) DIMO+BOSC (72) FLUO (73)
+## CARB+PROC (27)              .     0.2278         1.1685    1.0720
+## CHECK (74)             6.4580          .         5.7896    5.3069
+## DIMO+BOSC (72)         1.2793     0.2236              .    1.0563
+## FLUO (73)              1.3927     0.2432         1.2534         .
+## FLUZ (74)              1.5457     0.2694         1.3896    1.2742
+## PROC (74)              1.7654     0.3075         1.5864    1.4543
+## TMET (62)              3.1269     0.5458         2.8173    2.5831
+##                FLUZ (74) PROC (74) TMET (62)
+## CARB+PROC (27)    0.9628    0.8437    0.4757
+## CHECK (74)        4.7582    4.1662    2.3542
+## DIMO+BOSC (72)    0.9478    0.8301    0.4693
+## FLUO (73)         1.0312    0.9030    0.5105
+## FLUZ (74)              .    1.0010    0.5656
+## PROC (74)         1.3047         .    0.6458
+## TMET (62)         2.3160    2.0290         .
+## 
+## Quantifying heterogeneity / inconsistency:
+## tau^2 = 0.2050; I^2 = 91.5%
+## 
+## Tests of heterogeneity (within designs) and inconsistency (between designs):
+##                       Q d.f.  p-value
+## Total           4435.98  376        0
+## Within designs  4184.34  360        0
+## Between designs  251.64   16 &lt; 0.0001</code></pre>
+<p>A network graph is composed of nodes (fungicide treatments) and edges or links between two treatments directly compared in a same trial. This graph allows to visualize how the treatments relate to each other and the number of direct comparisons can be depicted by the thickness of the edges, but also with numbers presented at the top of the links.</p>
+<pre class="r"><code>netgraph(net_inc,
+  plastic = FALSE,
+  col = &quot;gray&quot;,
+  thickness = &quot;number.of.studies&quot;,
+  points = TRUE,
+  col.points = &quot;black&quot;,
+  cex.points = c(&quot;CARB+PROC (27)&quot; = 2.5, &quot;CHECK (74)&quot; = 6, &quot;DIMO+BOSC (72)&quot; = 5.75, &quot;FLUO (73)&quot; = 5.83, &quot;FLUZ (74)&quot; = 6, &quot;PROC (74)&quot; = 6, &quot;TMET (62)&quot; = 5),
+  number.of.studies = TRUE,
+  cex.number.of.studies = 1.25,
+  col.number.of.studies = &quot;black&quot;,
+  bg.number.of.studies = &quot;white&quot;,
+  multiarm = FALSE,
+  col.multiarm = &quot;gray&quot;,
+  pos.number.of.studies = 0.60
+)</code></pre>
+<p><img src="code-inc_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+</div>
+
+
+
+Copyright 2017 Emerson Del Ponte
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

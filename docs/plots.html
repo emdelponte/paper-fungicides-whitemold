@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Plots</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">NMA fungicide effects on white mold</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa fa fa-home"></span>
+     
+    About
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa fa fa-table"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa fa fa-file-code-o"></span>
+     
+    Documented analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="code-inc.html">Disease Incidence</a>
+    </li>
+    <li>
+      <a href="code-scl.html">Sclerotia mass</a>
+    </li>
+    <li>
+      <a href="code-yld.html">Soybean yield</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="plots.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Publication-ready plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emdelponte/paper-fungicides-whitemold">
+    <span class="fa fa-github-square"></span>
+     
+    source
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Plots</h1>
+
+</div>
+
+
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, warning = FALSE)</code></pre>
+<div id="plots" class="section level1">
+<h1>Plots</h1>
+<p>The plots below were presented in the article.</p>
+</div>
+<div id="histogramas" class="section level1">
+<h1>Histogramas</h1>
+<pre class="r"><code>## Log of the Effect-sizes
+mofo1 &lt;- mofo1 %&gt;%
+  mutate(
+    log_inc = log(inc),
+    log_scl = log(scl),
+    log_yld = log(yld)
+  )
+
+
+hist_log_inc &lt;- ggplot(mofo1, aes(log_inc)) + geom_histogram(binwidth = 0.5, color = &quot;black&quot;) + xlab(&quot;log(Incidence)&quot;)
+
+
+hist_inc &lt;- ggplot(mofo1, aes(inc)) + geom_histogram(binwidth = 6, color = &quot;black&quot;) + xlab(&quot;Incidence (%)&quot;)
+
+
+hist_log_scl &lt;- ggplot(mofo1, aes(log_scl)) + geom_histogram(binwidth = 0.5, color = &quot;black&quot;) + xlab(&quot;log(Sclerotia Mass)&quot;)
+
+
+hist_scl &lt;- ggplot(mofo1, aes(scl)) + geom_histogram(binwidth = 1500, color = &quot;black&quot;) + xlab(&quot;Sclerotia Mass (g/ha)&quot;)
+
+
+hist_log_yld &lt;- ggplot(mofo1, aes(log_yld)) + geom_histogram(binwidth = 0.06, color = &quot;black&quot;) + xlab(&quot;log(Yield)&quot;)
+
+
+hist_yld &lt;- ggplot(mofo1, aes(yld)) + geom_histogram(binwidth = 200, color = &quot;black&quot;) + xlab(&quot;Yield (Kg/ha)&quot;)
+
+
+library(cowplot)
+hist_plot &lt;- plot_grid(hist_inc, hist_log_inc, hist_scl, hist_log_scl, hist_yld, labels = c(&quot;A&quot;, &quot;D&quot;, &quot;B&quot;, &quot;E&quot;, &quot;C&quot;), nrow = 3, align = &quot;V&quot;)
+hist_plot</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig1_supp.png&quot;, width = 8, height = 11, dpi = 300)</code></pre>
+</div>
+<div id="boxplot" class="section level1">
+<h1>BOXPLOT</h1>
+<div id="incidence-inc" class="section level2">
+<h2>Incidence (inc)</h2>
+<pre class="r"><code>mofo1$fungicide2 &lt;- factor(mofo1$fungicide2, levels = c(&quot;CHECK&quot;, &quot;CARB+PROC&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUO&quot;, &quot;FLUZ&quot;, &quot;PROC&quot;, &quot;TMET&quot;))
+
+box_inc &lt;- ggplot(mofo1, aes(fungicide2, inc)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Fungicide&quot;, y = &quot;Incidence (%)&quot;) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 100)) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;none&quot;)</code></pre>
+</div>
+<div id="sclerotia-mass-scl" class="section level2">
+<h2>Sclerotia mass (scl)</h2>
+<pre class="r"><code>mofo1$fungicide2 &lt;- factor(mofo1$fungicide2, levels = c(&quot;CHECK&quot;, &quot;CARB+PROC&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUO&quot;, &quot;FLUZ&quot;, &quot;PROC&quot;, &quot;TMET&quot;))
+box_scl &lt;- ggplot(mofo1, aes(fungicide2, scl)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Fungicide&quot;, y = &quot;Sclerotia Mass (g/ha)&quot;) +
+  theme_grey() +
+  # scale_y_continuous(breaks=c(0,  5000, 10000), limits=c(0,10000))+
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;none&quot;)
+
+
+library(cowplot)
+box_inc_scl &lt;- plot_grid(box_inc, box_scl, labels = c(&quot;A&quot;, &quot;B&quot;), ncol = 2, align = &quot;HV&quot;)
+box_inc_scl</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig4.png&quot;, width = 9, height = 4, dpi = 300)</code></pre>
+</div>
+<div id="yield-yld" class="section level2">
+<h2>Yield (yld)</h2>
+<pre class="r"><code>mofo1$fungicide2 &lt;- factor(mofo1$fungicide2, levels = c(&quot;CHECK&quot;, &quot;CARB+PROC&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUO&quot;, &quot;FLUZ&quot;, &quot;PROC&quot;, &quot;TMET&quot;))
+box_yld &lt;- ggplot(mofo1, aes(fungicide2, yld)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = &quot;gray50&quot;) +
+  labs(x = &quot;Fungicide&quot;, y = &quot;Yield (kg/ha)&quot;) +
+  theme_grey() +
+  ylim(1000, 5000) +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;none&quot;)
+
+yld_year &lt;- mofo1 %&gt;%
+  filter(fungicide == &quot;AACHECK&quot;) %&gt;%
+  ggplot(aes(year, yld_check)) +
+  ylim(1000, 5000) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = &quot;gray50&quot;) +
+  labs(x = &quot;Crop Seasons&quot;, y = &quot;Yield (Kg/ha)&quot;) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1))
+
+library(cowplot)
+yld_box &lt;- plot_grid(yld_year, box_yld, labels = c(&quot;A&quot;, &quot;B&quot;), nrow = 1, align = &quot;H&quot;)
+yld_box</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig6.png&quot;, width = 9, height = 4, dpi = 300)</code></pre>
+</div>
+<div id="box_year_check" class="section level2">
+<h2>Box_year_check</h2>
+<pre class="r"><code>inc_year &lt;- mofo1 %&gt;%
+  filter(fungicide == &quot;AACHECK&quot;) %&gt;%
+  ggplot(aes(year, inc_check)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Crop Seasons&quot;, y = &quot;Incidence (%)&quot;) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 100))
+inc_year</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>scl_year &lt;- mofo1 %&gt;%
+  filter(fungicide == &quot;AACHECK&quot;) %&gt;%
+  ggplot(aes(year, scl_check)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Crop Seasons&quot;, y = &quot;Sclerotia Mass (g/ha)&quot;) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1))
+scl_year</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<pre class="r"><code>library(cowplot)
+box_year &lt;- plot_grid(inc_year, scl_year, labels = c(&quot;A&quot;, &quot;B&quot;), ncol = 2, align = &quot;HV&quot;)
+box_year</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig3.png&quot;, width = 8, height = 4, dpi = 300)</code></pre>
+</div>
+</div>
+<div id="efficacy-of-fungicides" class="section level1">
+<h1>Efficacy of fungicides</h1>
+<div id="incidence-x-sclerotia-mass" class="section level2">
+<h2>Incidence x Sclerotia Mass</h2>
+<pre class="r"><code>library(ggrepel)
+scl_inc &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=41911812&quot;,
+  sheetid = &quot;inc_scl&quot;
+)
+scl_inc &lt;- scl_inc %&gt;%
+  mutate(
+    inc = as.numeric(inc),
+    scl = as.numeric(scl),
+    inc_inf = as.numeric(inc_inf),
+    inc_sup = as.numeric(inc_sup),
+    scl_inf = as.numeric(scl_inf),
+    scl_sup = as.numeric(scl_sup)
+  )
+
+library(plyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## You have loaded plyr after dplyr - this is likely to cause problems.
+## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+## library(plyr); library(dplyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     compact</code></pre>
+<pre class="r"><code>scl_inc$Fungicide &lt;- revalue(scl_inc$Fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+set.seed(42)
+ggplot(scl_inc, aes(inc, scl)) +
+  geom_smooth(colour = &quot;black&quot;, method = &quot;lm&quot;) +
+  geom_errorbar(aes(ymin = scl_inf, ymax = scl_sup), width = 0.2, size = 0.5, color = &quot;gray45&quot;) +
+  geom_errorbarh(aes(xmin = inc_inf, xmax = inc_sup), height = 0.5, size = 0.5, color = &quot;gray45&quot;) +
+  ylab(&quot;Sclerotia mass reduction (%)&quot;) +
+  xlab(&quot;White mold incidence reduction (%)&quot;) +
+  scale_y_continuous(breaks = c(20, 30, 40, 50, 60, 70, 80, 90), limits = c(40, 93)) +
+  scale_x_continuous(breaks = c(20, 30, 40, 50, 60, 70, 80, 90, 100), limits = c(40, 93)) +
+  geom_label_repel(aes(inc, scl, label = scl_inc$Fungicide),
+    fill = &quot;grey90&quot;, size = 3, color = &quot;black&quot;, label.size = 0.30,
+    box.padding = unit(0.30, &quot;lines&quot;)
+  ) +
+  geom_point(aes(inc, scl)) +
+  theme_grey(base_size = 16) +
+  coord_fixed() +
+  theme(legend.position = &quot;none&quot;, axis.text = element_text(size = 10), axis.title = element_text(size = 10), panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;))</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig5.png&quot;, width = 5, height = 4, dpi = 300)</code></pre>
+</div>
+<div id="incidence-x-yield" class="section level2">
+<h2>Incidence x Yield</h2>
+<pre class="r"><code>library(cowplot)
+library(ggrepel)
+library(tidyverse)
+inc_yld &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=2054312057&quot;,
+  sheetid = &quot;inc_yld&quot;
+)
+inc_yld &lt;- inc_yld %&gt;%
+  mutate(
+    inc = as.numeric(inc),
+    yld = as.numeric(yld),
+    inc_inf = as.numeric(inc_inf),
+    inc_sup = as.numeric(inc_sup),
+    yld_inf = as.numeric(yld_inf),
+    yld_sup = as.numeric(yld_sup)
+  )
+
+library(plyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## You have loaded plyr after dplyr - this is likely to cause problems.
+## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+## library(plyr); library(dplyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     compact</code></pre>
+<pre class="r"><code>inc_yld$Fungicide &lt;- revalue(inc_yld$Fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+set.seed(42)
+gr1 &lt;- ggplot(inc_yld, aes(inc, yld)) +
+  geom_smooth(colour = &quot;black&quot;, method = &quot;lm&quot;) +
+  geom_errorbar(aes(ymin = yld_inf, ymax = yld_sup), width = 0.2, size = 0.5, color = &quot;gray45&quot;) +
+  geom_errorbarh(aes(xmin = inc_inf, xmax = inc_sup), height = 5, size = 0.5, color = &quot;gray45&quot;) +
+  ylab(&quot;Yield difference (kg/ha)&quot;) +
+  xlab(&quot;White mold incidence control (%)&quot;) +
+  scale_y_continuous(breaks = c(200, 300, 400, 500, 600, 700, 800), limits = c(200, 750)) +
+  scale_x_continuous(breaks = c(20, 30, 40, 50, 60, 70, 80, 90), limits = c(40, 90)) +
+  geom_label_repel(aes(inc, yld, label = inc_yld$Fungicide),
+    fill = &quot;grey90&quot;,
+    size = 3.5, color = &quot;black&quot;, label.size = 0.25,
+    box.padding = unit(0.30, &quot;lines&quot;)
+  ) +
+  geom_point(aes(inc, yld)) +
+  theme_grey(base_size = 16) +
+  theme(axis.text = element_text(size = 10), panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.title = element_text(size = 12), legend.position = &quot;none&quot;)
+
+gr1</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="sclerotia-mass-x-yield" class="section level2">
+<h2>Sclerotia Mass x Yield</h2>
+<pre class="r"><code>scl_yld &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=1324985291&quot;,
+  sheetid = &quot;scl_yld&quot;
+)
+scl_yld &lt;- scl_yld %&gt;%
+  mutate(
+    yld = as.numeric(yld),
+    scl = as.numeric(scl),
+    yld_inf = as.numeric(yld_inf),
+    yld_sup = as.numeric(yld_sup),
+    scl_inf = as.numeric(scl_inf),
+    scl_sup = as.numeric(scl_sup)
+  )
+
+library(plyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## You have loaded plyr after dplyr - this is likely to cause problems.
+## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+## library(plyr); library(dplyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     compact</code></pre>
+<pre class="r"><code>scl_yld$Fungicide &lt;- revalue(scl_yld$Fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+set.seed(42)
+gr2 &lt;- ggplot(scl_yld, aes(scl, yld)) +
+  geom_smooth(colour = &quot;black&quot;, method = &quot;lm&quot;) +
+  geom_errorbarh(aes(xmin = scl_inf, xmax = scl_sup), height = 5, size = 0.5, color = &quot;gray45&quot;) +
+  geom_errorbar(aes(ymin = yld_inf, ymax = yld_sup), width = 0.2, size = 0.5, color = &quot;gray45&quot;) +
+  ylab(&quot;Yield difference (kg/ha)&quot;) +
+  xlab(&quot;Sclerotia control (%)&quot;) +
+  scale_y_continuous(breaks = c(200, 300, 400, 500, 600, 700, 800), limits = c(200, 750)) +
+  scale_x_continuous(breaks = c(40, 50, 60, 70, 80, 90, 100), limits = c(40, 95)) +
+  geom_label_repel(aes(scl, yld, label = scl_yld$Fungicide),
+    fill = &quot;grey90&quot;, size = 3.5, color = &quot;black&quot;, label.size = 0.50,
+    box.padding = unit(0.30, &quot;lines&quot;)
+  ) +
+  geom_point(aes(scl, yld)) +
+  theme_grey(base_size = 16) +
+  theme(axis.text = element_text(size = 10), axis.title = element_text(size = 12), legend.position = &quot;none&quot;, panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;))
+gr2</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>library(cowplot)
+efficacy_plot &lt;- plot_grid(gr1, gr2, labels = c(&quot;A&quot;, &quot;B&quot;), ncol = 2, align = &quot;HV&quot;)
+efficacy_plot</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig7.png&quot;, width = 9, height = 5, dpi = 300)</code></pre>
+</div>
+</div>
+<div id="map" class="section level1">
+<h1>Map</h1>
+<pre class="r"><code>library(maps)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;maps&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     map</code></pre>
+<pre class="r"><code># Get Brazil map info
+brazil_map &lt;- map_data(&quot;world&quot;, &quot;brazil&quot;)
+
+# get shape file
+library(rgdal)</code></pre>
+<pre><code>## Loading required package: sp</code></pre>
+<pre><code>## 
+## Attaching package: &#39;sp&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:meta&#39;:
+## 
+##     bubble</code></pre>
+<pre><code>## rgdal: version: 1.3-4, (SVN revision 766)
+##  Geospatial Data Abstraction Library extensions to R successfully loaded
+##  Loaded GDAL runtime: GDAL 2.1.3, released 2017/20/01
+##  Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.5/Resources/library/rgdal/gdal
+##  GDAL binary built with GEOS: FALSE 
+##  Loaded PROJ.4 runtime: Rel. 4.9.3, 15 August 2016, [PJ_VERSION: 493]
+##  Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.5/Resources/library/rgdal/proj
+##  Linking to sp version: 1.3-1</code></pre>
+<pre class="r"><code>brazil &lt;- readOGR(&quot;data/shape-files-BRA/BRA_adm1.shp&quot;, layer = &quot;BRA_adm1&quot;)</code></pre>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;/Users/emersondelponte/Google Drive/01-Students/Jhonatan-Barro/Articles_white_mold/NMA-white-mold/meta-analise-r-2/data/shape-files-BRA/BRA_adm1.shp&quot;, layer: &quot;BRA_adm1&quot;
+## with 27 features
+## It has 16 fields</code></pre>
+<pre class="r"><code>mapa &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=1595668142&quot;,
+  sheetid = &quot;Map&quot;
+)
+mapa &lt;- mapa %&gt;%
+  mutate(
+    lon = as.numeric(lon),
+    lat = as.numeric(lat),
+    inc = as.numeric(inc)
+  )
+
+library(ggrepel)
+mapa &lt;- ggplot(mapa) +
+  geom_polygon(
+    data = brazil,
+    aes(x = long, y = lat, group = group),
+    fill = &quot;NA&quot;, colour = &quot;grey50&quot;
+  ) +
+  geom_jitter(alpha = 1 / 2, data = mapa, aes(
+    x = lon, y = lat,
+    size = inc,
+    colour = NULL
+  )) +
+  coord_fixed() +
+  theme_minimal() +
+  theme(legend.position = &quot;top&quot;) +
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) +
+  scale_size_continuous(name = &quot;Mean incidence untreated plots (%)&quot;) +
+  geom_label_repel(aes(x = lon, y = lat, size = 7, label = name),
+    box.padding = unit(0.3, &quot;lines&quot;),
+    point.padding = unit(0.8, &quot;lines&quot;),
+    fontface = &quot;bold&quot;, segment.size = 0.5, size = 2
+  ) +
+  coord_map(xlim = -c(60, 40), ylim = -c(34, 10))</code></pre>
+<pre><code>## Regions defined for each Polygons</code></pre>
+<pre><code>## Coordinate system already present. Adding new coordinate system, which will replace the existing one.</code></pre>
+<pre class="r"><code>mapa</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig1.png&quot;, width = 6, height = 6, dpi = 300)</code></pre>
+</div>
+<div id="tetris-plot" class="section level1">
+<h1>Tetris plot</h1>
+<pre class="r"><code>mofo &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=2085223602&quot;,
+  sheetid = &quot;Probability&quot;
+)
+mofo &lt;- mofo %&gt;%
+  mutate(
+    tau = as.numeric(tau),
+    D = as.numeric(D)
+  )
+library(plyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## You have loaded plyr after dplyr - this is likely to cause problems.
+## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+## library(plyr); library(dplyr)</code></pre>
+<pre><code>## -------------------------------------------------------------------------</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:maps&#39;:
+## 
+##     ozone</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     compact</code></pre>
+<pre class="r"><code>mofo$fungicide &lt;- revalue(mofo$fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+prob &lt;- function(C, P, tau, D) {
+  profit &lt;- (D - (C / (P / 1000))) / sqrt(tau) # loss
+  prob_gain &lt;- pnorm(profit)
+  prob_gain
+}
+
+
+
+for (i in 1:length(mofo$C)) {
+  mofo$breacking_even[i] &lt;- prob(C = mofo$C[i], D = mofo$D[i], tau = mofo$tau[i], P = mofo$P[i]) * 100
+}
+
+
+
+library(viridis)</code></pre>
+<pre><code>## Loading required package: viridisLite</code></pre>
+<pre><code>## 
+## Attaching package: &#39;viridis&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:scales&#39;:
+## 
+##     viridis_pal</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(ggthemes)
+dat &lt;- mofo %&gt;%
+  mutate(
+    breacking_even = as.numeric(breacking_even),
+    breacking_even = round(breacking_even, 1)
+  )
+
+
+dat %&gt;%
+  mutate(breacking_even1 = case_when(
+    breacking_even &gt;= 75 ~ &quot;p \u2265 75  &quot;,
+    breacking_even &lt; 75 &amp; breacking_even &gt;= 65 ~ &quot;65 \u2265 p &lt; 75  &quot;,
+    breacking_even &lt; 65 &amp; breacking_even &gt;= 55 ~ &quot;55 \u2265 p &lt; 65  &quot;,
+    breacking_even &lt; 55 &amp; breacking_even &gt;= 45 ~ &quot;45 \u2265 p &lt; 55  &quot;,
+    breacking_even &lt; 45 ~ &quot;0 \u2265 p &lt; 45  &quot;
+  )) %&gt;%
+  ggplot(aes(factor(C), factor(P), z = breacking_even1, fill = breacking_even1, label = breacking_even1)) +
+  geom_tile(color = &quot;white&quot;, size = 0.5) +
+  scale_fill_viridis(discrete = T, option = &quot;D&quot;, begin = 0, end = 1, name = &quot;Probability of breaking-even (%)&quot;) +
+  scale_color_gradient(high = &quot;white&quot;, low = &quot;white&quot;) +
+  labs(x = &quot;Fungicide + application cost (US$/ha)&quot;, y = &quot;Soybean price (US$/ton) &quot;, fill = &quot;&quot;) +
+  # facet_wrap(~fungicide, ncol = 2, scales = &quot;free&quot;, dir = &quot;h&quot;)+
+  theme_minimal() +
+  facet_grid(class ~ fungicide, scales = &quot;free&quot;) +
+  theme(text = element_text(size = 12), legend.justification = &quot;center&quot;, strip.text.x = element_text(size = 12, face = &quot;bold&quot;), strip.text.y = element_text(size = 12, face = &quot;bold&quot;), panel.grid.minor = element_line(colour = &quot;white&quot;), panel.grid.major = element_line(colour = &quot;white&quot;), legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;Figures/Fig8.png&quot;, width = 8, height = 7, dpi = 300)</code></pre>
+</div>
+
+
+
+Copyright 2017 Emerson Del Ponte
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

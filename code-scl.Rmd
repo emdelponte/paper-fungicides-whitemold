@@ -1,6 +1,8 @@
 % Code
 
-
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
 
 # Network model
 
@@ -195,6 +197,7 @@ netgraph(net_scl,
   pos.number.of.studies = 0.60
 )
 ```
+
 
 
 

@@ -26,20 +26,20 @@ navbar:
   - text: Data
     icon: fa fa-table
     href: data.html
-  - text: Analysis
+  - text: Documented analysis
     icon: fa fa-file-code-o
     menu:
-    - text: Incidence reduction
+    - text: Disease Incidence 
       href: code-inc.html
-    - text: Sclerotia reduction
+    - text: Sclerotia mass 
       href: code-scl.html
-    - text: Yield response
+    - text: Soybean yield 
       href: code-yld.html
-  - text: Plots
+  - text: Publication-ready plots
     icon: fa-bar-chart 
     href: plots.html
   right:
   - text: source
     icon: fa-github-square
-    href: https://github.com/emdelponte/research-compendium-website
+    href: https://github.com/emdelponte/paper-fungicides-whitemold
 
