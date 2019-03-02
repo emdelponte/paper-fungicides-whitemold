@@ -1,6 +1,10 @@
 # Reproducible report: Network meta-analysis of fungicide effects on white mold epidemics and soybean yield
 
-This repository contains all files needed to reproduce the analysis 
+This repository contains all files required to reproduce the computational work in a research article, including all data and R scripts, entitled "Performance and profitability of fungicides for managing soybean white mold: 10-year summary of cooperative trials". The article is the main outcome of a MSc thesis defended by Jhonatan Paulo Barro, an M.Sc. student of the Graduate Program in Plant Pathology, under the supervision of Prof. Emerson Del Ponte, Universidade Federal de Viçosa.
+
+# Citation of the repository
+
+Del Ponte, E. M. (2019, March 2). Research Compendium - Performance and profitability of fungicides for managing soybean white mold: 10-year summary of cooperative trials. Retrieved from [osf.io/v7y2e](http://osf.io/v7y2e)
 
 
 # Authors of the content
@@ -21,7 +25,7 @@ There are three basic folders:
 
 - `data/` - raw and further processed data.
 - `Figures`/ - folder to place the figures generated in R
-- `docs/` - html files of reproducible report with all text and figures.
+- `docs/` - html files of the reproducible report with all text and figures.
 - `preprint/` - A PDF version of the accepted manuscript
 
 
