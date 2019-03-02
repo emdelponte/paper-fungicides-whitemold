@@ -372,6 +372,7 @@ div.tocify {
 
 <div id="data" class="section level1">
 <h1>Data</h1>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, warning = FALSE)</code></pre>
 <p>The data used in this analysis were obtained from the network of cooperative trials for evaluating fungicide efficacy on the reduction of white mold of soybean and yield response. The experiments were conducted in the main soybean growing regions of Brazil where white mold causes significant losses.</p>
 <p>The primary data has been published as annual reports that summarized either a mean value for the treatments across all experiments for the year or, in some years, the mean values at the trial level.</p>
 <p>There are three response variables of our interest in the studies:</p>
@@ -583,16 +584,8 @@ dat_wm_inc %&gt;%
     mean_scl_sd = mean(sd_scl)
   ) %&gt;%
   filter(mean_scl != &quot;NA&quot;) %&gt;%
-  filter(mean_scl &gt; 0)</code></pre>
-<pre><code>## Warning in evalq(as.numeric(scl), &lt;environment&gt;): NAs introduced by
-## coercion</code></pre>
-<pre><code>## Warning in evalq(as.numeric(scl_check), &lt;environment&gt;): NAs introduced by
-## coercion</code></pre>
-<pre><code>## Warning in evalq(as.numeric(scl_qmr), &lt;environment&gt;): NAs introduced by
-## coercion</code></pre>
-<pre><code>## Warning in evalq(as.numeric(sd_scl), &lt;environment&gt;): NAs introduced by
-## coercion</code></pre>
-<pre class="r"><code>library(readr)
+  filter(mean_scl &gt; 0)
+library(readr)
 write_csv(dat_wm_scl, &quot;data/dat-scl.csv&quot;)</code></pre>
 <pre class="r"><code>dat_wm_scl %&gt;%
   tabyl(fungicide2, year)</code></pre>

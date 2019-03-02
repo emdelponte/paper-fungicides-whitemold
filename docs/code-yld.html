@@ -371,6 +371,7 @@ div.tocify {
 </div>
 
 
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, warning = FALSE)</code></pre>
 <div id="network-model" class="section level1">
 <h1>Network model</h1>
 <p><em>Description</em></p>
@@ -995,10 +996,8 @@ pair_yld &lt;- pairwise(
   data = wm_yld,
   sm = &quot;MD&quot;
 )</code></pre>
-<pre class="r"><code>net_yld &lt;- netmeta(TE, seTE, treat1, treat2, studlab, data = pair_yld, sm = &quot;MD&quot;)</code></pre>
-<pre><code>## Warning: Note, treatments within a comparison have been re-sorted in
-## increasing order.</code></pre>
-<pre class="r"><code>summary(net_yld)</code></pre>
+<pre class="r"><code>net_yld &lt;- netmeta(TE, seTE, treat1, treat2, studlab, data = pair_yld, sm = &quot;MD&quot;)
+summary(net_yld)</code></pre>
 <pre><code>## Number of studies: k = 73
 ## Number of treatments: n = 7
 ## Number of pairwise comparisons: m = 1191
@@ -1140,7 +1139,7 @@ pair_yld &lt;- pairwise(
   col.multiarm = &quot;gray&quot;,
   pos.number.of.studies = 0.60
 )</code></pre>
-<p><img src="code-yld_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="code-yld_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 </div>
 

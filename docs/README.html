@@ -367,30 +367,42 @@ div.tocify {
 </div>
 
 
-<div id="network-meta-analysis-of-fungicide-effects-on-white-mold-epidemics-and-soybean-yield" class="section level1">
-<h1>Network meta-analysis of fungicide effects on white mold epidemics and soybean yield</h1>
-<p>This website</p>
-<p>This repository contains the development version of RMarkdown code and data example files to customize and generate a responsive website for a research compendium - a compilation of data and computer code to reproduce the results of a publication.</p>
-<p>Website example: <a href="https://emdelponte.github.io/research-compendium-website/" class="uri">https://emdelponte.github.io/research-compendium-website/</a></p>
+<div id="reproducible-report-network-meta-analysis-of-fungicide-effects-on-white-mold-epidemics-and-soybean-yield" class="section level1">
+<h1>Reproducible report: Network meta-analysis of fungicide effects on white mold epidemics and soybean yield</h1>
+<p>This repository contains all files required to reproduce the computational work in a research article, including all data and R scripts, entitled “Performance and profitability of fungicides for managing soybean white mold: 10-year summary of cooperative trials”. The article is the main outcome of a MSc thesis defended by Jhonatan Paulo Barro, an M.Sc. student of the Graduate Program in Plant Pathology, under the supervision of Prof. Emerson Del Ponte, Universidade Federal de Viçosa.</p>
 </div>
-<div id="authors-of-this-repository" class="section level1">
-<h1>Authors of this repository</h1>
-<p>Emerson Del Ponte (<a href="mailto:delponte@ufv.br">delponte@ufv.br</a>)</p>
+<div id="reproducible-analysis-report" class="section level1">
+<h1>Reproducible analysis report</h1>
+<p>A website was constructed to describe in detail the data and all steps of the statistical analysis</p>
+<p><a href="https://emdelponte.github.io/paper-fungicides-whitemold/" class="uri">https://emdelponte.github.io/paper-fungicides-whitemold/</a></p>
+</div>
+<div id="citation-of-the-osf-repository" class="section level1">
+<h1>Citation of the OSF repository</h1>
+<p>Del Ponte, E. M. (2019, March 2). Research Compendium - Performance and profitability of fungicides for managing soybean white mold: 10-year summary of cooperative trials. Retrieved from <a href="http://osf.io/v7y2e">osf.io/v7y2e</a></p>
+</div>
+<div id="osf-preprint-version-of-the-manuscript" class="section level1">
+<h1>OSF Preprint version of the manuscript</h1>
+<p>Del Ponte, E. M. (2019, March 2). Performance and profitability of fungicides for managing soybean white mold: a 10-year summary of cooperative trials. <a href="https://doi.org/10.31219/osf.io/qtjzc" class="uri">https://doi.org/10.31219/osf.io/qtjzc</a></p>
+</div>
+<div id="authors-of-the-content" class="section level1">
+<h1>Authors of the content</h1>
+<p>Emerson Del Ponte (<a href="mailto:delponte@ufv.br">delponte@ufv.br</a>)<br />
+Jhonatan Barro</p>
 </div>
 <div id="overview-of-contents" class="section level1">
 <h1>Overview of contents</h1>
-<p>The root of the repository contains files that set the website structure (menus, etc.) and style (<code>.yml</code>, <code>.css</code>), as well as the citation/reference style. There are four <code>.Rmd</code> files to generate each website page, which are separated according to the convention of a research compendium.</p>
+<p>The root of the repository contains files that set the website structure (menus, etc.) and style (<code>.yml</code>, <code>.css</code>), as well as the citation/reference style. There are four <code>.Rmd</code> files that generates each html, which are separated according to the convention of a research compendium.</p>
 <ul>
-<li><code>index.Rmd</code>: Describe the research, objectives, authorship, etc.</li>
+<li><code>index.Rmd</code>: Describes the research, objectives, authorship, etc.</li>
 <li><code>data.Rmd</code>: Contains the raw or raw-derived data.</li>
-<li><code>code.Rmd</code>: Produces the main analysis report with a template that follows the Wickham and Grolemund’s <a href="http://r4ds.had.co.nz/introduction.html">model for a data science project</a>: import -&gt; tidy -&gt; transform-visualize-model -&gt; communicate</li>
-<li><code>manuscript.Rmd</code>: An example html manuscript template. It is intended to work as a pre-print version of the paper.</li>
+<li><code>code-xxx.Rmd</code> files: Provides documents scripts for conducting the analysis</li>
 </ul>
 <p>There are three basic folders:</p>
 <ul>
 <li><code>data/</code> - raw and further processed data.</li>
-<li><code>docs/</code> - html files of the research compendia with all text and figures.</li>
-<li><code>supp/</code> - supplementary files that are not data or R codes.</li>
+<li><code>docs/</code> - html files of the reproducible report with all text and figures.</li>
+<li><code>Figures</code>/ - folder to place the figures generated in R</li>
+<li><code>Preprint/</code> - A PDF version of the accepted manuscript</li>
 </ul>
 </div>
 <div id="licenses" class="section level1">
@@ -399,19 +411,16 @@ div.tocify {
 <p>Code: <a href="https://opensource.org/licenses/MIT">MIT</a> year: 2017, copyright holder: Emerson Del Ponte</p>
 <p>Data: [CC-0[(<a href="https://creativecommons.org/publicdomain/zero/1.0/" class="uri">https://creativecommons.org/publicdomain/zero/1.0/</a>)] attribution requested in reuse</p>
 </div>
-<div id="credits" class="section level1">
-<h1>Credits</h1>
-<p>This compendium was developed based on the ideas and examples in other resources which suggest a research compendium structured as an R package. However, this is not an R package as I focused mainly on four main Rmd files that are used to generatethe html output of the compendium, but there there is clear separation of the data and the output files.</p>
-<p><a href="https://doi.org/10.7287/peerj.preprints.3192v1">Marwick et al. 2017</a></p>
-<p><a href="https://github.com/jhollist/manuscriptPackage">jhollist manuscriptpackage</a></p>
-<p><a href="https://github.com/cboettig/template">cboettig template</a></p>
-<p><a href="https://github.com/benmarwick/researchcompendium">benmarwick researchcompendium</a></p>
-<p><a href="Reproducibility_in_Plant_Pathology" class="uri">Reproducibility_in_Plant_Pathology</a></p>
-<p><a href="http://r4ds.had.co.nz/">R for Data Science</a></p>
-</div>
 <div id="contact" class="section level1">
 <h1>Contact</h1>
-<p>Emerson Del Ponte, Associate Professor, Departmento de Fitopatologia, Universidade Federal de Viçosa, Viçosa, MG Brazil (+55) 31 38991103 <a href="mailto:delponte@ufv.br">delponte@ufv.br</a> Twitter: <span class="citation">@emdelponte</span></p>
+<p>Emerson Del Ponte<br />
+Associate Professor<br />
+Departmento de Fitopatologia<br />
+Universidade Federal de Viçosa<br />
+Viçosa MG Brazil<br />
+(+55) 31 38991103<br />
+<a href="mailto:delponte@ufv.br">delponte@ufv.br</a><br />
+Twitter: <span class="citation">@emdelponte</span></p>
 </div>
 
 

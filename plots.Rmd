@@ -2,16 +2,14 @@
 
 
 ```{r}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+knitr::opts_chunk$set(fig.width=8, fig.height=6, fig.path='Figures/',
+                       warning=FALSE, message=FALSE)
 ```
 
-# Plots
-
-The plots below were presented in the article.
+Here we show the scripts that produce the publication-ready plots for the article. There is a hidden script ([see the Rmd file](https://github.com/emdelponte/paper-fungicides-whitemold/blob/master/plots.Rmd)) to prepare the data for the plots including variable creation and transformation. 
 
 
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-
 # Load packages
 library(tidyverse)
 library(metafor)
@@ -25,11 +23,13 @@ library(DT)
 library(broom)
 library(dplyr)
 library(gsheet)
+```
+
+```{r include=FALSE}
+# Load the data and prepare everything for producing the plots
 mofo_br <- gsheet2tbl(
   "https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit?usp=sharing"
 )
-
-
 
 target <- c("DIMO+BOSC", "FLUZ", "FLUO", "PROCY", "TIOF", "AACHECK", "CARB+PROCY")
 mofo1 <- mofo_br %>%
@@ -65,9 +65,6 @@ mofo1 <- mofo1 %>%
     scl_cv = as.numeric(scl_cv),
     yld_cv = as.numeric(yld_cv)
   )
-
-
-
 
 library(plyr)
 mofo1$fungicide2 <- revalue(mofo1$fungicide2, c("AACHECK_0" = "CHECK"))
@@ -112,110 +109,58 @@ mofo1$V_yld <- with(mofo1, yld_qmr / (4 * yld^2))
 mofo1$V_yld2 <- mofo1$yld_qmr / 4 # multivariate approach
 ```
 
+## Fig 1 Map
 
-# Histogramas
-```{r, warning=FALSE}
-## Log of the Effect-sizes
-mofo1 <- mofo1 %>%
+```{r}
+library(maps)
+# Get Brazil map info
+brazil_map <- map_data("world", "brazil")
+
+# get shape file
+library(rgdal)
+brazil <- readOGR("data/shape-files-BRA/BRA_adm1.shp", layer = "BRA_adm1")
+
+mapa <- gsheet2tbl(
+  "https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=1595668142",
+  sheetid = "Map"
+)
+mapa <- mapa %>%
   mutate(
-    log_inc = log(inc),
-    log_scl = log(scl),
-    log_yld = log(yld)
+    lon = as.numeric(lon),
+    lat = as.numeric(lat),
+    inc = as.numeric(inc)
   )
 
+library(ggrepel)
+mapa <- ggplot(mapa) +
+  geom_polygon(
+    data = brazil,
+    aes(x = long, y = lat, group = group),
+    fill = "NA", colour = "grey50"
+  ) +
+  geom_jitter(alpha = 1 / 2, data = mapa, aes(
+    x = lon, y = lat,
+    size = inc,
+    colour = NULL
+  )) +
+  coord_fixed() +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs(x = "Longitude", y = "Latitude") +
+  scale_size_continuous(name = "Mean incidence untreated plots (%)") +
+  geom_label_repel(aes(x = lon, y = lat, size = 7, label = name),
+    box.padding = unit(0.3, "lines"),
+    point.padding = unit(0.8, "lines"),
+    fontface = "bold", segment.size = 0.5, size = 2
+  ) +
+  coord_map(xlim = -c(60, 40), ylim = -c(34, 10))
 
-hist_log_inc <- ggplot(mofo1, aes(log_inc)) + geom_histogram(binwidth = 0.5, color = "black") + xlab("log(Incidence)")
-
-
-hist_inc <- ggplot(mofo1, aes(inc)) + geom_histogram(binwidth = 6, color = "black") + xlab("Incidence (%)")
-
-
-hist_log_scl <- ggplot(mofo1, aes(log_scl)) + geom_histogram(binwidth = 0.5, color = "black") + xlab("log(Sclerotia Mass)")
-
-
-hist_scl <- ggplot(mofo1, aes(scl)) + geom_histogram(binwidth = 1500, color = "black") + xlab("Sclerotia Mass (g/ha)")
-
-
-hist_log_yld <- ggplot(mofo1, aes(log_yld)) + geom_histogram(binwidth = 0.06, color = "black") + xlab("log(Yield)")
-
-
-hist_yld <- ggplot(mofo1, aes(yld)) + geom_histogram(binwidth = 200, color = "black") + xlab("Yield (Kg/ha)")
-
-
-library(cowplot)
-hist_plot <- plot_grid(hist_inc, hist_log_inc, hist_scl, hist_log_scl, hist_yld, labels = c("A", "D", "B", "E", "C"), nrow = 3, align = "V")
-hist_plot
-
-
-ggsave("Figures/Fig1_supp.png", width = 8, height = 11, dpi = 300)
+mapa
+ggsave("Fig1.png", width = 6, height = 6, dpi = 300)
 ```
 
 
-#BOXPLOT
-
-## Incidence (inc)
-
-```{r, message=FALSE, warning=FALSE}
-mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ", "PROC", "TMET"))
-
-box_inc <- ggplot(mofo1, aes(fungicide2, inc)) +
-  geom_boxplot(size = 0.5, outlier.shape = NA) +
-  geom_jitter(width = 0.1, shape = 1, size = 2, color = "gray50") +
-  labs(x = "Fungicide", y = "Incidence (%)") +
-  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 100)) +
-  theme_grey() +
-  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
-```
-## Sclerotia mass (scl)
-
-```{r, message=FALSE, warning=FALSE}
-mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ", "PROC", "TMET"))
-box_scl <- ggplot(mofo1, aes(fungicide2, scl)) +
-  geom_boxplot(size = 0.5, outlier.shape = NA) +
-  geom_jitter(width = 0.1, shape = 1, size = 2, color = "gray50") +
-  labs(x = "Fungicide", y = "Sclerotia Mass (g/ha)") +
-  theme_grey() +
-  # scale_y_continuous(breaks=c(0,  5000, 10000), limits=c(0,10000))+
-  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
-
-
-library(cowplot)
-box_inc_scl <- plot_grid(box_inc, box_scl, labels = c("A", "B"), ncol = 2, align = "HV")
-box_inc_scl
-
-ggsave("Figures/Fig4.png", width = 9, height = 4, dpi = 300)
-```
-##  Yield (yld)
-
-```{r, message=FALSE, warning=FALSE}
-mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ", "PROC", "TMET"))
-box_yld <- ggplot(mofo1, aes(fungicide2, yld)) +
-  geom_boxplot(size = 0.5, outlier.shape = NA) +
-  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = "gray50") +
-  labs(x = "Fungicide", y = "Yield (kg/ha)") +
-  theme_grey() +
-  ylim(1000, 5000) +
-  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
-
-yld_year <- mofo1 %>%
-  filter(fungicide == "AACHECK") %>%
-  ggplot(aes(year, yld_check)) +
-  ylim(1000, 5000) +
-  geom_boxplot(size = 0.5, outlier.shape = NA) +
-  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = "gray50") +
-  labs(x = "Crop Seasons", y = "Yield (Kg/ha)") +
-  theme_grey() +
-  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1))
-
-library(cowplot)
-yld_box <- plot_grid(yld_year, box_yld, labels = c("A", "B"), nrow = 1, align = "H")
-yld_box
-
-ggsave("Figures/Fig6.png", width = 9, height = 4, dpi = 300)
-```
-
-
-## Box_year_check
+## Fig 3 Boxp disease per season
 
 ```{r, warning=FALSE}
 inc_year <- mofo1 %>%
@@ -245,13 +190,47 @@ library(cowplot)
 box_year <- plot_grid(inc_year, scl_year, labels = c("A", "B"), ncol = 2, align = "HV")
 box_year
 
-ggsave("Figures/Fig3.png", width = 8, height = 4, dpi = 300)
+ggsave("Fig3.png", width = 8, height = 4, dpi = 300)
 ```
 
-# Efficacy of fungicides
+
+## Fig 4 Box disease per fungicide
+
+```{r, message=FALSE, warning=FALSE}
+mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ", "PROC", "TMET"))
+
+box_inc <- ggplot(mofo1, aes(fungicide2, inc)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = "gray50") +
+  labs(x = "Fungicide", y = "Incidence (%)") +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 100)) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+```
 
 
-## Incidence x Sclerotia Mass
+
+```{r, message=FALSE, warning=FALSE}
+mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ", "PROC", "TMET"))
+box_scl <- ggplot(mofo1, aes(fungicide2, scl)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = "gray50") +
+  labs(x = "Fungicide", y = "Sclerotia Mass (g/ha)") +
+  theme_grey() +
+  # scale_y_continuous(breaks=c(0,  5000, 10000), limits=c(0,10000))+
+  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+
+
+library(cowplot)
+box_inc_scl <- plot_grid(box_inc, box_scl, labels = c("A", "B"), ncol = 2, align = "HV")
+box_inc_scl
+
+ggsave("Fig4.png", width = 9, height = 4, dpi = 300)
+```
+
+
+
+## Fig 5 Scatter disease variables
 
 ```{r}
 library(ggrepel)
@@ -290,10 +269,42 @@ ggplot(scl_inc, aes(inc, scl)) +
   theme_grey(base_size = 16) +
   coord_fixed() +
   theme(legend.position = "none", axis.text = element_text(size = 10), axis.title = element_text(size = 10), panel.background = element_rect(fill = "grey96", color = "grey96"))
-ggsave("Figures/Fig5.png", width = 5, height = 4, dpi = 300)
+ggsave("Fig5.png", width = 5, height = 4, dpi = 300)
 ```
 
-## Incidence x Yield
+
+##  Fig 6 Box yield season and fungicide
+
+```{r, message=FALSE, warning=FALSE}
+mofo1$fungicide2 <- factor(mofo1$fungicide2, levels = c("CHECK", "CARB+PROC", "DIMO+BOSC", "FLUO", "FLUZ", "PROC", "TMET"))
+box_yld <- ggplot(mofo1, aes(fungicide2, yld)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = "gray50") +
+  labs(x = "Fungicide", y = "Yield (kg/ha)") +
+  theme_grey() +
+  ylim(1000, 5000) +
+  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+
+yld_year <- mofo1 %>%
+  filter(fungicide == "AACHECK") %>%
+  ggplot(aes(year, yld_check)) +
+  ylim(1000, 5000) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = "gray50") +
+  labs(x = "Crop Seasons", y = "Yield (Kg/ha)") +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = "grey96", color = "grey96"), axis.text.x = element_text(angle = 45, hjust = 1))
+
+library(cowplot)
+yld_box <- plot_grid(yld_year, box_yld, labels = c("A", "B"), nrow = 1, align = "H")
+yld_box
+
+ggsave("Fig6.png", width = 9, height = 4, dpi = 300)
+```
+
+
+## Fig 7 Scatter yield x disease
+
 
 ```{r}
 library(cowplot)
@@ -339,7 +350,6 @@ gr1
 ```
 
 
-## Sclerotia Mass x Yield
 
 
 ```{r}
@@ -386,64 +396,12 @@ library(cowplot)
 efficacy_plot <- plot_grid(gr1, gr2, labels = c("A", "B"), ncol = 2, align = "HV")
 efficacy_plot
 
-ggsave("Figures/Fig7.png", width = 9, height = 5, dpi = 300)
+ggsave("Fig7.png", width = 9, height = 5, dpi = 300)
 ```
 
-
-# Map
-
-```{r}
-library(maps)
-# Get Brazil map info
-brazil_map <- map_data("world", "brazil")
-
-# get shape file
-library(rgdal)
-brazil <- readOGR("data/shape-files-BRA/BRA_adm1.shp", layer = "BRA_adm1")
+## Fig 8 tile risk categories 
 
 
-
-mapa <- gsheet2tbl(
-  "https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=1595668142",
-  sheetid = "Map"
-)
-mapa <- mapa %>%
-  mutate(
-    lon = as.numeric(lon),
-    lat = as.numeric(lat),
-    inc = as.numeric(inc)
-  )
-
-library(ggrepel)
-mapa <- ggplot(mapa) +
-  geom_polygon(
-    data = brazil,
-    aes(x = long, y = lat, group = group),
-    fill = "NA", colour = "grey50"
-  ) +
-  geom_jitter(alpha = 1 / 2, data = mapa, aes(
-    x = lon, y = lat,
-    size = inc,
-    colour = NULL
-  )) +
-  coord_fixed() +
-  theme_minimal() +
-  theme(legend.position = "top") +
-  labs(x = "Longitude", y = "Latitude") +
-  scale_size_continuous(name = "Mean incidence untreated plots (%)") +
-  geom_label_repel(aes(x = lon, y = lat, size = 7, label = name),
-    box.padding = unit(0.3, "lines"),
-    point.padding = unit(0.8, "lines"),
-    fontface = "bold", segment.size = 0.5, size = 2
-  ) +
-  coord_map(xlim = -c(60, 40), ylim = -c(34, 10))
-
-mapa
-ggsave("Figures/Fig1.png", width = 6, height = 6, dpi = 300)
-```
-
-
-# Tetris plot
 
 ```{r}
 
@@ -501,7 +459,48 @@ dat %>%
   theme_minimal() +
   facet_grid(class ~ fungicide, scales = "free") +
   theme(text = element_text(size = 12), legend.justification = "center", strip.text.x = element_text(size = 12, face = "bold"), strip.text.y = element_text(size = 12, face = "bold"), panel.grid.minor = element_line(colour = "white"), panel.grid.major = element_line(colour = "white"), legend.position = "bottom")
-ggsave("Figures/Fig8.png", width = 8, height = 7, dpi = 300)
+ggsave("Fig8.png", width = 8, height = 7, dpi = 300)
 ```
+
+
+
+## Fig 1 Supplement
+
+```{r, warning=FALSE}
+## Log of the Effect-sizes
+mofo1 <- mofo1 %>%
+  mutate(
+    log_inc = log(inc),
+    log_scl = log(scl),
+    log_yld = log(yld)
+  )
+
+
+hist_log_inc <- ggplot(mofo1, aes(log_inc)) + geom_histogram(binwidth = 0.5, color = "black") + xlab("log(Incidence)")
+
+
+hist_inc <- ggplot(mofo1, aes(inc)) + geom_histogram(binwidth = 6, color = "black") + xlab("Incidence (%)")
+
+
+hist_log_scl <- ggplot(mofo1, aes(log_scl)) + geom_histogram(binwidth = 0.5, color = "black") + xlab("log(Sclerotia Mass)")
+
+
+hist_scl <- ggplot(mofo1, aes(scl)) + geom_histogram(binwidth = 1500, color = "black") + xlab("Sclerotia Mass (g/ha)")
+
+
+hist_log_yld <- ggplot(mofo1, aes(log_yld)) + geom_histogram(binwidth = 0.06, color = "black") + xlab("log(Yield)")
+
+
+hist_yld <- ggplot(mofo1, aes(yld)) + geom_histogram(binwidth = 200, color = "black") + xlab("Yield (Kg/ha)")
+
+
+library(cowplot)
+hist_plot <- plot_grid(hist_inc, hist_log_inc, hist_scl, hist_log_scl, hist_yld, labels = c("A", "D", "B", "E", "C"), nrow = 3, align = "V")
+hist_plot
+
+
+ggsave("Fig1_supp.png", width = 8, height = 11, dpi = 300)
+```
+
 
 

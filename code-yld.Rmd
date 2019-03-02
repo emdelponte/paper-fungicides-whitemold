@@ -1,5 +1,11 @@
 % Code
 
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+
 # Network model
 
 
