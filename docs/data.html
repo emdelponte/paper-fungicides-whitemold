@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>data.utf8.md</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,9 +28,8 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -106,6 +105,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +122,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -140,6 +141,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,13 +199,73 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -180,7 +278,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("hide" === "show");
 });
 </script>
-
 
 
 
@@ -386,7 +483,7 @@ div.tocify {
 <h2>Data import</h2>
 <p>The full data was stored in a GoogleSheet. Let’s import the data using the <code>gsheet</code> package.</p>
 <pre class="r"><code>Sys.setlocale(&quot;LC_ALL&quot;, &quot;pt_BR.UTF-8&quot;) # set UT-8 for displaying names correctly</code></pre>
-<pre><code>## [1] &quot;pt_BR.UTF-8/pt_BR.UTF-8/pt_BR.UTF-8/C/pt_BR.UTF-8/C&quot;</code></pre>
+<pre><code>## [1] &quot;pt_BR.UTF-8/pt_BR.UTF-8/pt_BR.UTF-8/C/pt_BR.UTF-8/en_US.UTF-8&quot;</code></pre>
 <pre class="r"><code>library(gsheet)
 dat_wm &lt;- gsheet2tbl(
   &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit?usp=sharing&quot;
@@ -397,42 +494,42 @@ dat_wm &lt;- gsheet2tbl(
 <pre class="r"><code>dplyr::glimpse(dat_wm)</code></pre>
 <pre><code>## Observations: 756
 ## Variables: 36
-## $ study       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2,...
-## $ year        &lt;chr&gt; &quot;2008/2009&quot;, &quot;2008/2009&quot;, &quot;2008/2009&quot;, &quot;2008/2009&quot;...
-## $ location    &lt;chr&gt; &quot;Montividiu&quot;, &quot;Montividiu&quot;, &quot;Montividiu&quot;, &quot;Montivi...
-## $ state       &lt;chr&gt; &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;G...
-## $ elevation   &lt;dbl&gt; 921, 921, 921, 921, 921, 921, 921, 921, 921, 921, ...
-## $ region      &lt;chr&gt; &quot;Northern&quot;, &quot;Northern&quot;, &quot;Northern&quot;, &quot;Northern&quot;, &quot;N...
-## $ pd          &lt;chr&gt; &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, &quot;11/1/2008&quot;...
-## $ cultivar    &lt;chr&gt; &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, ...
-## $ fungicide   &lt;chr&gt; &quot;FLUO&quot;, &quot;PROCY&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUZ&quot;, &quot;AACHECK&quot;, &quot;...
-## $ dose1       &lt;chr&gt; &quot;250g/há&quot;, &quot;500g/há&quot;, &quot;400g/há&quot;, &quot;500g/há&quot;, NA, &quot;5...
-## $ dose2       &lt;chr&gt; &quot;0.5L/há&quot;, &quot;1kg/há&quot;, &quot;1L/há&quot;, &quot;1L/há&quot;, NA, &quot;1L/há&quot;...
-## $ group       &lt;chr&gt; &quot;pyridinyl-ethyl-benzamides&quot;, &quot;dicarboxamida&quot;, &quot;Ca...
-## $ n_spray     &lt;dbl&gt; 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,...
-## $ inc_check   &lt;dbl&gt; 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 53, 53...
-## $ inc         &lt;dbl&gt; 27, 40, 28, 26, 76, 53, 29, 55, 36, 37, 42, 16, 7,...
-## $ inc_mean    &lt;dbl&gt; 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39...
-## $ inc_cv      &lt;dbl&gt; 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 53, 53...
-## $ inc_qmr     &lt;dbl&gt; 86.70228, 86.70228, 86.70228, 86.70228, 86.70228, ...
-## $ sd_inc      &lt;dbl&gt; 7.071068, 9.535023, 3.304038, 6.701990, 5.597619, ...
-## $ scl_check   &lt;chr&gt; &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2...
-## $ scl         &lt;chr&gt; &quot;643&quot;, &quot;516&quot;, &quot;921&quot;, &quot;643&quot;, &quot;2194&quot;, &quot;1663&quot;, &quot;753&quot;,...
-## $ scl_mean    &lt;chr&gt; &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, ...
-## $ scl_cv      &lt;chr&gt; &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;2...
-## $ scl_qmr     &lt;chr&gt; &quot;262333.99&quot;, &quot;262333.99&quot;, &quot;262333.99&quot;, &quot;262333.99&quot;...
-## $ sd_scl      &lt;chr&gt; &quot;191.3697882&quot;, &quot;243.1177698&quot;, &quot;344.8573074&quot;, &quot;478....
-## $ yld_check   &lt;dbl&gt; 2265, 2265, 2265, 2265, 2265, 2265, 2265, 2265, 22...
-## $ yld         &lt;dbl&gt; 3044, 2967, 2925, 2965, 2265, 2618, 2820, 2503, 28...
-## $ yld_mean    &lt;dbl&gt; 2772.8, 2772.8, 2772.8, 2772.8, 2772.8, 2772.8, 27...
-## $ yld_cv      &lt;dbl&gt; 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8,...
-## $ yld_qmr     &lt;dbl&gt; 34780.02, 34780.02, 34780.02, 34780.02, 34780.02, ...
-## $ sd_yld      &lt;dbl&gt; 189.12, 226.41, 203.47, 285.09, 85.57, 110.48, 142...
-## $ author      &lt;chr&gt; &quot;Embrapa soja&quot;, &quot;Embrapa soja&quot;, &quot;Embrapa soja&quot;, &quot;E...
-## $ publication &lt;chr&gt; &quot;Documentos 345&quot;, &quot;Documentos 345&quot;, &quot;Documentos 34...
-## $ design_yld  &lt;dbl&gt; 3, 3, 3, 3, 3, 3, NA, NA, NA, NA, NA, 3, 3, 3, 3, ...
-## $ design_scl  &lt;dbl&gt; 4, 4, 4, 4, 4, 4, NA, NA, NA, NA, NA, 4, 4, 4, 4, ...
-## $ design_inc  &lt;dbl&gt; 2, 2, 2, 2, 2, 2, NA, NA, NA, NA, NA, 2, 2, 2, 2, ...</code></pre>
+## $ study       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2…
+## $ year        &lt;chr&gt; &quot;2008/2009&quot;, &quot;2008/2009&quot;, &quot;2008/2009&quot;, &quot;2008/2009&quot;, …
+## $ location    &lt;chr&gt; &quot;Montividiu&quot;, &quot;Montividiu&quot;, &quot;Montividiu&quot;, &quot;Montividi…
+## $ state       &lt;chr&gt; &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;, &quot;GO&quot;…
+## $ elevation   &lt;dbl&gt; 921, 921, 921, 921, 921, 921, 921, 921, 921, 921, 92…
+## $ region      &lt;chr&gt; &quot;Northern&quot;, &quot;Northern&quot;, &quot;Northern&quot;, &quot;Northern&quot;, &quot;Nor…
+## $ pd          &lt;chr&gt; &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, &quot;11/1/2008&quot;, …
+## $ cultivar    &lt;chr&gt; &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P98Y11&quot;, &quot;P…
+## $ fungicide   &lt;chr&gt; &quot;FLUO&quot;, &quot;PROCY&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUZ&quot;, &quot;AACHECK&quot;, &quot;TI…
+## $ dose1       &lt;chr&gt; &quot;250g/há&quot;, &quot;500g/há&quot;, &quot;400g/há&quot;, &quot;500g/há&quot;, NA, &quot;500…
+## $ dose2       &lt;chr&gt; &quot;0.5L/há&quot;, &quot;1kg/há&quot;, &quot;1L/há&quot;, &quot;1L/há&quot;, NA, &quot;1L/há&quot;, …
+## $ group       &lt;chr&gt; &quot;pyridinyl-ethyl-benzamides&quot;, &quot;dicarboxamida&quot;, &quot;Carb…
+## $ n_spray     &lt;dbl&gt; 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2…
+## $ inc_check   &lt;dbl&gt; 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 53, 53, …
+## $ inc         &lt;dbl&gt; 27, 40, 28, 26, 76, 53, 29, 55, 36, 37, 42, 16, 7, 1…
+## $ inc_mean    &lt;dbl&gt; 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2, 39.2…
+## $ inc_cv      &lt;dbl&gt; 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 53, 53, …
+## $ inc_qmr     &lt;dbl&gt; 86.70228, 86.70228, 86.70228, 86.70228, 86.70228, 86…
+## $ sd_inc      &lt;dbl&gt; 7.071068, 9.535023, 3.304038, 6.701990, 5.597619, 12…
+## $ scl_check   &lt;chr&gt; &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;2194&quot;, &quot;219…
+## $ scl         &lt;chr&gt; &quot;643&quot;, &quot;516&quot;, &quot;921&quot;, &quot;643&quot;, &quot;2194&quot;, &quot;1663&quot;, &quot;753&quot;, &quot;…
+## $ scl_mean    &lt;chr&gt; &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1098.5&quot;, &quot;1…
+## $ scl_cv      &lt;chr&gt; &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;, &quot;24&quot;…
+## $ scl_qmr     &lt;chr&gt; &quot;262333.99&quot;, &quot;262333.99&quot;, &quot;262333.99&quot;, &quot;262333.99&quot;, …
+## $ sd_scl      &lt;chr&gt; &quot;191.3697882&quot;, &quot;243.1177698&quot;, &quot;344.8573074&quot;, &quot;478.91…
+## $ yld_check   &lt;dbl&gt; 2265, 2265, 2265, 2265, 2265, 2265, 2265, 2265, 2265…
+## $ yld         &lt;dbl&gt; 3044, 2967, 2925, 2965, 2265, 2618, 2820, 2503, 2867…
+## $ yld_mean    &lt;dbl&gt; 2772.8, 2772.8, 2772.8, 2772.8, 2772.8, 2772.8, 2772…
+## $ yld_cv      &lt;dbl&gt; 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8…
+## $ yld_qmr     &lt;dbl&gt; 34780.02, 34780.02, 34780.02, 34780.02, 34780.02, 34…
+## $ sd_yld      &lt;dbl&gt; 189.12, 226.41, 203.47, 285.09, 85.57, 110.48, 142.0…
+## $ author      &lt;chr&gt; &quot;Embrapa soja&quot;, &quot;Embrapa soja&quot;, &quot;Embrapa soja&quot;, &quot;Emb…
+## $ publication &lt;chr&gt; &quot;Documentos 345&quot;, &quot;Documentos 345&quot;, &quot;Documentos 345&quot;…
+## $ design_yld  &lt;dbl&gt; 3, 3, 3, 3, 3, 3, NA, NA, NA, NA, NA, 3, 3, 3, 3, 3,…
+## $ design_scl  &lt;dbl&gt; 4, 4, 4, 4, 4, 4, NA, NA, NA, NA, NA, 4, 4, 4, 4, 4,…
+## $ design_inc  &lt;dbl&gt; 2, 2, 2, 2, 2, 2, NA, NA, NA, NA, NA, 2, 2, 2, 2, 2,…</code></pre>
 <p>Let’s reduce the number of columns by selecting the most important variables for our analysis.</p>
 <pre class="r"><code>library(tidyverse) # for using pipes
 dat_wm &lt;- dat_wm %&gt;%

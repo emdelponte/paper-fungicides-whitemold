@@ -444,11 +444,11 @@ dat <- mofo %>%
 
 dat %>%
   mutate(breacking_even1 = case_when(
-    breacking_even >= 75 ~ "p \u2265 75  ",
-    breacking_even < 75 & breacking_even >= 65 ~ "65 \u2265 p < 75  ",
-    breacking_even < 65 & breacking_even >= 55 ~ "55 \u2265 p < 65  ",
-    breacking_even < 55 & breacking_even >= 45 ~ "45 \u2265 p < 55  ",
-    breacking_even < 45 ~ "0 \u2265 p < 45  "
+    breacking_even >= 75 ~ "p \u2264 75  ",
+    breacking_even < 75 & breacking_even >= 65 ~ "65 \u2264 p < 75  ",
+    breacking_even < 65 & breacking_even >= 55 ~ "55 \u2264 p < 65  ",
+    breacking_even < 55 & breacking_even >= 45 ~ "45 \u2264 p < 55  ",
+    breacking_even < 45 ~ "0 \u2264 p < 45  "
   )) %>%
   ggplot(aes(factor(C), factor(P), z = breacking_even1, fill = breacking_even1, label = breacking_even1)) +
   geom_tile(color = "white", size = 0.5) +

@@ -11,7 +11,7 @@
 
 
 
-<title>Plots</title>
+<title>plots.utf8.md</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,9 +28,8 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -106,6 +105,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +122,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -140,6 +141,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,13 +199,73 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -180,7 +278,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("hide" === "show");
 });
 </script>
-
 
 
 
@@ -371,46 +468,363 @@ div.tocify {
 </div>
 
 
-<pre class="r"><code>knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path=&#39;Figures/&#39;,
-                      echo=FALSE, warning=FALSE, message=FALSE)</code></pre>
+<pre class="r"><code>knitr::opts_chunk$set(fig.width=8, fig.height=6, fig.path=&#39;Figures/&#39;,
+                       warning=FALSE, message=FALSE)</code></pre>
 <p>Here we show the scripts that produce the publication-ready plots for the article. There is a hidden script (<a href="https://github.com/emdelponte/paper-fungicides-whitemold/blob/master/plots.Rmd">see the Rmd file</a>) to prepare the data for the plots including variable creation and transformation.</p>
 <div id="fig-1-map" class="section level2">
 <h2>Fig 1 Map</h2>
+<pre class="r"><code>library(maps)
+# Get Brazil map info
+brazil_map &lt;- map_data(&quot;world&quot;, &quot;brazil&quot;)
+
+# get shape file
+library(rgdal)
+brazil &lt;- readOGR(&quot;data/shape-files-BRA/BRA_adm1.shp&quot;, layer = &quot;BRA_adm1&quot;)</code></pre>
 <pre><code>## OGR data source with driver: ESRI Shapefile 
-## Source: &quot;/Users/emersondelponte/Documents/github/paper-fungicides-whitemold/data/shape-files-BRA/BRA_adm1.shp&quot;, layer: &quot;BRA_adm1&quot;
+## Source: &quot;/Users/emersondelponte/Documents/GitHub/paper-fungicides-whitemold/data/shape-files-BRA/BRA_adm1.shp&quot;, layer: &quot;BRA_adm1&quot;
 ## with 27 features
 ## It has 16 fields</code></pre>
-<p><img src="Figures/unnamed-chunk-4-1.png" width="1152" /></p>
+<pre class="r"><code>mapa &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=1595668142&quot;,
+  sheetid = &quot;Map&quot;
+)
+mapa &lt;- mapa %&gt;%
+  mutate(
+    lon = as.numeric(lon),
+    lat = as.numeric(lat),
+    inc = as.numeric(inc)
+  )
+
+library(ggrepel)
+mapa &lt;- ggplot(mapa) +
+  geom_polygon(
+    data = brazil,
+    aes(x = long, y = lat, group = group),
+    fill = &quot;NA&quot;, colour = &quot;grey50&quot;
+  ) +
+  geom_jitter(alpha = 1 / 2, data = mapa, aes(
+    x = lon, y = lat,
+    size = inc,
+    colour = NULL
+  )) +
+  coord_fixed() +
+  theme_minimal() +
+  theme(legend.position = &quot;top&quot;) +
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) +
+  scale_size_continuous(name = &quot;Mean incidence untreated plots (%)&quot;) +
+  geom_label_repel(aes(x = lon, y = lat, size = 7, label = name),
+    box.padding = unit(0.3, &quot;lines&quot;),
+    point.padding = unit(0.8, &quot;lines&quot;),
+    fontface = &quot;bold&quot;, segment.size = 0.5, size = 2
+  ) +
+  coord_map(xlim = -c(60, 40), ylim = -c(34, 10))
+
+mapa</code></pre>
+<p><img src="Figures/unnamed-chunk-4-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig1.png&quot;, width = 6, height = 6, dpi = 300)</code></pre>
 </div>
 <div id="fig-3-boxp-disease-per-season" class="section level2">
 <h2>Fig 3 Boxp disease per season</h2>
-<p><img src="Figures/unnamed-chunk-5-1.png" width="1152" /><img src="Figures/unnamed-chunk-5-2.png" width="1152" /><img src="Figures/unnamed-chunk-5-3.png" width="1152" /></p>
+<pre class="r"><code>inc_year &lt;- mofo1 %&gt;%
+  filter(fungicide == &quot;AACHECK&quot;) %&gt;%
+  ggplot(aes(year, inc_check)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Crop Seasons&quot;, y = &quot;Incidence (%)&quot;) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 100))
+inc_year</code></pre>
+<p><img src="Figures/unnamed-chunk-5-1.png" width="768" /></p>
+<pre class="r"><code>scl_year &lt;- mofo1 %&gt;%
+  filter(fungicide == &quot;AACHECK&quot;) %&gt;%
+  ggplot(aes(year, scl_check)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Crop Seasons&quot;, y = &quot;Sclerotia Mass (g/ha)&quot;) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1))
+scl_year</code></pre>
+<p><img src="Figures/unnamed-chunk-5-2.png" width="768" /></p>
+<pre class="r"><code>library(cowplot)
+box_year &lt;- plot_grid(inc_year, scl_year, labels = c(&quot;A&quot;, &quot;B&quot;), ncol = 2, align = &quot;HV&quot;)
+box_year</code></pre>
+<p><img src="Figures/unnamed-chunk-5-3.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig3.png&quot;, width = 8, height = 4, dpi = 300)</code></pre>
 </div>
 <div id="fig-4-box-disease-per-fungicide" class="section level2">
 <h2>Fig 4 Box disease per fungicide</h2>
-<p><img src="Figures/unnamed-chunk-7-1.png" width="1152" /></p>
+<pre class="r"><code>mofo1$fungicide2 &lt;- factor(mofo1$fungicide2, levels = c(&quot;CHECK&quot;, &quot;CARB+PROC&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUO&quot;, &quot;FLUZ&quot;, &quot;PROC&quot;, &quot;TMET&quot;))
+
+box_inc &lt;- ggplot(mofo1, aes(fungicide2, inc)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Fungicide&quot;, y = &quot;Incidence (%)&quot;) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 100)) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;none&quot;)</code></pre>
+<pre class="r"><code>mofo1$fungicide2 &lt;- factor(mofo1$fungicide2, levels = c(&quot;CHECK&quot;, &quot;CARB+PROC&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUO&quot;, &quot;FLUZ&quot;, &quot;PROC&quot;, &quot;TMET&quot;))
+box_scl &lt;- ggplot(mofo1, aes(fungicide2, scl)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2, color = &quot;gray50&quot;) +
+  labs(x = &quot;Fungicide&quot;, y = &quot;Sclerotia Mass (g/ha)&quot;) +
+  theme_grey() +
+  # scale_y_continuous(breaks=c(0,  5000, 10000), limits=c(0,10000))+
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;none&quot;)
+
+
+library(cowplot)
+box_inc_scl &lt;- plot_grid(box_inc, box_scl, labels = c(&quot;A&quot;, &quot;B&quot;), ncol = 2, align = &quot;HV&quot;)
+box_inc_scl</code></pre>
+<p><img src="Figures/unnamed-chunk-7-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig4.png&quot;, width = 9, height = 4, dpi = 300)</code></pre>
 </div>
 <div id="fig-5-scatter-disease-variables" class="section level2">
 <h2>Fig 5 Scatter disease variables</h2>
-<p><img src="Figures/unnamed-chunk-8-1.png" width="1152" /></p>
+<pre class="r"><code>library(ggrepel)
+scl_inc &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=41911812&quot;,
+  sheetid = &quot;inc_scl&quot;
+)
+scl_inc &lt;- scl_inc %&gt;%
+  mutate(
+    inc = as.numeric(inc),
+    scl = as.numeric(scl),
+    inc_inf = as.numeric(inc_inf),
+    inc_sup = as.numeric(inc_sup),
+    scl_inf = as.numeric(scl_inf),
+    scl_sup = as.numeric(scl_sup)
+  )
+
+library(plyr)
+scl_inc$Fungicide &lt;- revalue(scl_inc$Fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+set.seed(42)
+ggplot(scl_inc, aes(inc, scl)) +
+  geom_smooth(colour = &quot;black&quot;, method = &quot;lm&quot;) +
+  geom_errorbar(aes(ymin = scl_inf, ymax = scl_sup), width = 0.2, size = 0.5, color = &quot;gray45&quot;) +
+  geom_errorbarh(aes(xmin = inc_inf, xmax = inc_sup), height = 0.5, size = 0.5, color = &quot;gray45&quot;) +
+  ylab(&quot;Sclerotia mass reduction (%)&quot;) +
+  xlab(&quot;White mold incidence reduction (%)&quot;) +
+  scale_y_continuous(breaks = c(20, 30, 40, 50, 60, 70, 80, 90), limits = c(40, 93)) +
+  scale_x_continuous(breaks = c(20, 30, 40, 50, 60, 70, 80, 90, 100), limits = c(40, 93)) +
+  geom_label_repel(aes(inc, scl, label = scl_inc$Fungicide),
+    fill = &quot;grey90&quot;, size = 3, color = &quot;black&quot;, label.size = 0.30,
+    box.padding = unit(0.30, &quot;lines&quot;)
+  ) +
+  geom_point(aes(inc, scl)) +
+  theme_grey(base_size = 16) +
+  coord_fixed() +
+  theme(legend.position = &quot;none&quot;, axis.text = element_text(size = 10), axis.title = element_text(size = 10), panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;))</code></pre>
+<p><img src="Figures/unnamed-chunk-8-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig5.png&quot;, width = 5, height = 4, dpi = 300)</code></pre>
 </div>
 <div id="fig-6-box-yield-season-and-fungicide" class="section level2">
 <h2>Fig 6 Box yield season and fungicide</h2>
-<p><img src="Figures/unnamed-chunk-9-1.png" width="1152" /></p>
+<pre class="r"><code>mofo1$fungicide2 &lt;- factor(mofo1$fungicide2, levels = c(&quot;CHECK&quot;, &quot;CARB+PROC&quot;, &quot;DIMO+BOSC&quot;, &quot;FLUO&quot;, &quot;FLUZ&quot;, &quot;PROC&quot;, &quot;TMET&quot;))
+box_yld &lt;- ggplot(mofo1, aes(fungicide2, yld)) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = &quot;gray50&quot;) +
+  labs(x = &quot;Fungicide&quot;, y = &quot;Yield (kg/ha)&quot;) +
+  theme_grey() +
+  ylim(1000, 5000) +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;none&quot;)
+
+yld_year &lt;- mofo1 %&gt;%
+  filter(fungicide == &quot;AACHECK&quot;) %&gt;%
+  ggplot(aes(year, yld_check)) +
+  ylim(1000, 5000) +
+  geom_boxplot(size = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, shape = 1, size = 2.5, color = &quot;gray50&quot;) +
+  labs(x = &quot;Crop Seasons&quot;, y = &quot;Yield (Kg/ha)&quot;) +
+  theme_grey() +
+  theme(panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.text.x = element_text(angle = 45, hjust = 1))
+
+library(cowplot)
+yld_box &lt;- plot_grid(yld_year, box_yld, labels = c(&quot;A&quot;, &quot;B&quot;), nrow = 1, align = &quot;H&quot;)
+yld_box</code></pre>
+<p><img src="Figures/unnamed-chunk-9-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig6.png&quot;, width = 9, height = 4, dpi = 300)</code></pre>
 </div>
 <div id="fig-7-scatter-yield-x-disease" class="section level2">
 <h2>Fig 7 Scatter yield x disease</h2>
-<p><img src="Figures/unnamed-chunk-10-1.png" width="1152" /></p>
-<p><img src="Figures/unnamed-chunk-11-1.png" width="1152" /></p>
-<p><img src="Figures/unnamed-chunk-12-1.png" width="1152" /></p>
+<pre class="r"><code>library(cowplot)
+library(ggrepel)
+library(tidyverse)
+inc_yld &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=2054312057&quot;,
+  sheetid = &quot;inc_yld&quot;
+)
+inc_yld &lt;- inc_yld %&gt;%
+  mutate(
+    inc = as.numeric(inc),
+    yld = as.numeric(yld),
+    inc_inf = as.numeric(inc_inf),
+    inc_sup = as.numeric(inc_sup),
+    yld_inf = as.numeric(yld_inf),
+    yld_sup = as.numeric(yld_sup)
+  )
+
+library(plyr)
+inc_yld$Fungicide &lt;- revalue(inc_yld$Fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+set.seed(42)
+gr1 &lt;- ggplot(inc_yld, aes(inc, yld)) +
+  geom_smooth(colour = &quot;black&quot;, method = &quot;lm&quot;) +
+  geom_errorbar(aes(ymin = yld_inf, ymax = yld_sup), width = 0.2, size = 0.5, color = &quot;gray45&quot;) +
+  geom_errorbarh(aes(xmin = inc_inf, xmax = inc_sup), height = 5, size = 0.5, color = &quot;gray45&quot;) +
+  ylab(&quot;Yield difference (kg/ha)&quot;) +
+  xlab(&quot;White mold incidence control (%)&quot;) +
+  scale_y_continuous(breaks = c(200, 300, 400, 500, 600, 700, 800), limits = c(200, 750)) +
+  scale_x_continuous(breaks = c(20, 30, 40, 50, 60, 70, 80, 90), limits = c(40, 90)) +
+  geom_label_repel(aes(inc, yld, label = inc_yld$Fungicide),
+    fill = &quot;grey90&quot;,
+    size = 3.5, color = &quot;black&quot;, label.size = 0.25,
+    box.padding = unit(0.30, &quot;lines&quot;)
+  ) +
+  geom_point(aes(inc, yld)) +
+  theme_grey(base_size = 16) +
+  theme(axis.text = element_text(size = 10), panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;), axis.title = element_text(size = 12), legend.position = &quot;none&quot;)
+
+gr1</code></pre>
+<p><img src="Figures/unnamed-chunk-10-1.png" width="768" /></p>
+<pre class="r"><code>scl_yld &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=1324985291&quot;,
+  sheetid = &quot;scl_yld&quot;
+)
+scl_yld &lt;- scl_yld %&gt;%
+  mutate(
+    yld = as.numeric(yld),
+    scl = as.numeric(scl),
+    yld_inf = as.numeric(yld_inf),
+    yld_sup = as.numeric(yld_sup),
+    scl_inf = as.numeric(scl_inf),
+    scl_sup = as.numeric(scl_sup)
+  )
+
+library(plyr)
+scl_yld$Fungicide &lt;- revalue(scl_yld$Fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+set.seed(42)
+gr2 &lt;- ggplot(scl_yld, aes(scl, yld)) +
+  geom_smooth(colour = &quot;black&quot;, method = &quot;lm&quot;) +
+  geom_errorbarh(aes(xmin = scl_inf, xmax = scl_sup), height = 5, size = 0.5, color = &quot;gray45&quot;) +
+  geom_errorbar(aes(ymin = yld_inf, ymax = yld_sup), width = 0.2, size = 0.5, color = &quot;gray45&quot;) +
+  ylab(&quot;Yield difference (kg/ha)&quot;) +
+  xlab(&quot;Sclerotia control (%)&quot;) +
+  scale_y_continuous(breaks = c(200, 300, 400, 500, 600, 700, 800), limits = c(200, 750)) +
+  scale_x_continuous(breaks = c(40, 50, 60, 70, 80, 90, 100), limits = c(40, 95)) +
+  geom_label_repel(aes(scl, yld, label = scl_yld$Fungicide),
+    fill = &quot;grey90&quot;, size = 3.5, color = &quot;black&quot;, label.size = 0.50,
+    box.padding = unit(0.30, &quot;lines&quot;)
+  ) +
+  geom_point(aes(scl, yld)) +
+  theme_grey(base_size = 16) +
+  theme(axis.text = element_text(size = 10), axis.title = element_text(size = 12), legend.position = &quot;none&quot;, panel.background = element_rect(fill = &quot;grey96&quot;, color = &quot;grey96&quot;))
+gr2</code></pre>
+<p><img src="Figures/unnamed-chunk-11-1.png" width="768" /></p>
+<pre class="r"><code>library(cowplot)
+efficacy_plot &lt;- plot_grid(gr1, gr2, labels = c(&quot;A&quot;, &quot;B&quot;), ncol = 2, align = &quot;HV&quot;)
+efficacy_plot</code></pre>
+<p><img src="Figures/unnamed-chunk-12-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig7.png&quot;, width = 9, height = 5, dpi = 300)</code></pre>
 </div>
 <div id="fig-8-tile-risk-categories" class="section level2">
 <h2>Fig 8 tile risk categories</h2>
-<p><img src="Figures/unnamed-chunk-13-1.png" width="1152" /></p>
+<pre class="r"><code>mofo &lt;- gsheet2tbl(
+  &quot;https://docs.google.com/spreadsheets/d/1VLK94nZV9DhYNVEUXFb7aC5BjhJ21FYfLf8crj5m-a8/edit#gid=2085223602&quot;,
+  sheetid = &quot;Probability&quot;
+)
+mofo &lt;- mofo %&gt;%
+  mutate(
+    tau = as.numeric(tau),
+    D = as.numeric(D)
+  )
+library(plyr)
+mofo$fungicide &lt;- revalue(mofo$fungicide, c(&quot;TIOF&quot; = &quot;TMET&quot;))
+detach(&quot;package:plyr&quot;, unload = TRUE)
+
+prob &lt;- function(C, P, tau, D) {
+  profit &lt;- (D - (C / (P / 1000))) / sqrt(tau) # loss
+  prob_gain &lt;- pnorm(profit)
+  prob_gain
+}
+
+
+
+for (i in 1:length(mofo$C)) {
+  mofo$breacking_even[i] &lt;- prob(C = mofo$C[i], D = mofo$D[i], tau = mofo$tau[i], P = mofo$P[i]) * 100
+}
+
+
+
+library(viridis)
+library(tidyverse)
+library(ggthemes)
+dat &lt;- mofo %&gt;%
+  mutate(
+    breacking_even = as.numeric(breacking_even),
+    breacking_even = round(breacking_even, 1)
+  )
+
+
+dat %&gt;%
+  mutate(breacking_even1 = case_when(
+    breacking_even &gt;= 75 ~ &quot;p \u2264 75  &quot;,
+    breacking_even &lt; 75 &amp; breacking_even &gt;= 65 ~ &quot;65 \u2264 p &lt; 75  &quot;,
+    breacking_even &lt; 65 &amp; breacking_even &gt;= 55 ~ &quot;55 \u2264 p &lt; 65  &quot;,
+    breacking_even &lt; 55 &amp; breacking_even &gt;= 45 ~ &quot;45 \u2264 p &lt; 55  &quot;,
+    breacking_even &lt; 45 ~ &quot;0 \u2264 p &lt; 45  &quot;
+  )) %&gt;%
+  ggplot(aes(factor(C), factor(P), z = breacking_even1, fill = breacking_even1, label = breacking_even1)) +
+  geom_tile(color = &quot;white&quot;, size = 0.5) +
+  scale_fill_viridis(discrete = T, option = &quot;D&quot;, begin = 0, end = 1, name = &quot;Probability of breaking-even (%)&quot;) +
+  scale_color_gradient(high = &quot;white&quot;, low = &quot;white&quot;) +
+  labs(x = &quot;Fungicide + application cost (US$/ha)&quot;, y = &quot;Soybean price (US$/ton) &quot;, fill = &quot;&quot;) +
+  # facet_wrap(~fungicide, ncol = 2, scales = &quot;free&quot;, dir = &quot;h&quot;)+
+  theme_minimal() +
+  facet_grid(class ~ fungicide, scales = &quot;free&quot;) +
+  theme(text = element_text(size = 12), legend.justification = &quot;center&quot;, strip.text.x = element_text(size = 12, face = &quot;bold&quot;), strip.text.y = element_text(size = 12, face = &quot;bold&quot;), panel.grid.minor = element_line(colour = &quot;white&quot;), panel.grid.major = element_line(colour = &quot;white&quot;), legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="Figures/unnamed-chunk-13-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig8.png&quot;, width = 8, height = 7, dpi = 300)</code></pre>
 </div>
 <div id="fig-1-supplement" class="section level2">
 <h2>Fig 1 Supplement</h2>
-<p><img src="Figures/unnamed-chunk-14-1.png" width="1152" /></p>
+<pre class="r"><code>## Log of the Effect-sizes
+mofo1 &lt;- mofo1 %&gt;%
+  mutate(
+    log_inc = log(inc),
+    log_scl = log(scl),
+    log_yld = log(yld)
+  )
+
+
+hist_log_inc &lt;- ggplot(mofo1, aes(log_inc)) + geom_histogram(binwidth = 0.5, color = &quot;black&quot;) + xlab(&quot;log(Incidence)&quot;)
+
+
+hist_inc &lt;- ggplot(mofo1, aes(inc)) + geom_histogram(binwidth = 6, color = &quot;black&quot;) + xlab(&quot;Incidence (%)&quot;)
+
+
+hist_log_scl &lt;- ggplot(mofo1, aes(log_scl)) + geom_histogram(binwidth = 0.5, color = &quot;black&quot;) + xlab(&quot;log(Sclerotia Mass)&quot;)
+
+
+hist_scl &lt;- ggplot(mofo1, aes(scl)) + geom_histogram(binwidth = 1500, color = &quot;black&quot;) + xlab(&quot;Sclerotia Mass (g/ha)&quot;)
+
+
+hist_log_yld &lt;- ggplot(mofo1, aes(log_yld)) + geom_histogram(binwidth = 0.06, color = &quot;black&quot;) + xlab(&quot;log(Yield)&quot;)
+
+
+hist_yld &lt;- ggplot(mofo1, aes(yld)) + geom_histogram(binwidth = 200, color = &quot;black&quot;) + xlab(&quot;Yield (Kg/ha)&quot;)
+
+
+library(cowplot)
+hist_plot &lt;- plot_grid(hist_inc, hist_log_inc, hist_scl, hist_log_scl, hist_yld, labels = c(&quot;A&quot;, &quot;D&quot;, &quot;B&quot;, &quot;E&quot;, &quot;C&quot;), nrow = 3, align = &quot;V&quot;)
+hist_plot</code></pre>
+<p><img src="Figures/unnamed-chunk-14-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;Fig1_supp.png&quot;, width = 8, height = 11, dpi = 300)</code></pre>
 </div>
 
 
